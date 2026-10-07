@@ -1,0 +1,14 @@
+{
+  "name": "Inspección 5S EMEMSA",
+  "short_name": "5S EMEMSA",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#1C272B",
+  "theme_color": "#1C272B",
+  "lang": "es",
+  "icons": [
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+  ]
+}

@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>5S EMEMSA</title>
+<meta name="theme-color" content="#1C272B">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="5S EMEMSA">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<script>try{var t=localStorage.getItem("tema");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<style>
+:root{
+  --bg:#EEF1F0; --panel:#FFFFFF; --ink:#1C272B; --muted:#5D6B70; --line:#D3DADB;
+  --tape:#F2B705; --tapeInk:#1C272B; --ok:#2E7D5B; --red:#D7263D; --field:#F7F9F9;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --bg:#141B1E; --panel:#1D262A; --ink:#E7ECEC; --muted:#9AA8AC; --line:#33424A; --field:#172024;
+  --tape:#F2B705; --tapeInk:#141B1E; --ok:#5BB38A; --red:#FF5C6F; color-scheme:dark;
+}}
+:root[data-theme="dark"]{ --bg:#141B1E; --panel:#1D262A; --ink:#E7ECEC; --muted:#9AA8AC; --line:#33424A; --field:#172024; --ok:#5BB38A; --red:#FF5C6F; --tapeInk:#141B1E; color-scheme:dark;}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%; scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0; background:var(--bg); color:var(--ink); font:16px/1.45 "Barlow",system-ui,-apple-system,"Segoe UI",sans-serif; min-height:100%}
+h1,h2,h3,.cond{font-family:"Barlow Condensed","Arial Narrow",system-ui,sans-serif}
+.wrap{max-width:760px; margin:0 auto; padding:16px 16px 120px}
+header.top{display:flex; align-items:flex-end; justify-content:space-between; gap:12px; flex-wrap:wrap; margin:6px 0 14px}
+header.top h1{font-size:2rem; line-height:1; margin:0; font-weight:700; letter-spacing:.01em}
+header.top p{margin:4px 0 0; color:var(--muted); font-size:.95rem}
+nav.tabs{display:flex; gap:4px; background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:4px}
+nav.tabs button{border:0; background:none; color:var(--muted); font:600 1rem "Barlow Condensed",sans-serif; padding:6px 14px; border-radius:7px; cursor:pointer}
+nav.tabs button[aria-selected="true"]{background:var(--ink); color:var(--bg)}
+section.card{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:16px; margin-bottom:14px}
+section.card>h2{font-size:1.35rem; margin:0 0 12px; font-weight:600}
+.grid{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+.grid .full{grid-column:1/-1}
+@media (max-width:520px){.grid{grid-template-columns:1fr}}
+label.f{display:flex; flex-direction:column; gap:4px; font-size:.88rem; color:var(--muted); font-weight:500}
+input,select,textarea{font:inherit; color:var(--ink); background:var(--field); border:1px solid var(--line); border-radius:8px; padding:9px 10px; width:100%; min-width:0}
+textarea{resize:vertical; min-height:62px}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--tape); outline-offset:1px}
+.btn{font:600 1rem "Barlow Condensed",sans-serif; letter-spacing:.02em; border:1px solid var(--line); background:var(--panel); color:var(--ink); padding:9px 14px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:6px}
+.btn.primary{background:var(--ink); color:var(--bg); border-color:var(--ink)}
+.btn.ghost{background:none}
+.btn.danger{color:var(--red)}
+.btn:disabled{opacity:.5; cursor:default}
+.row{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
+.hz{border-left:6px solid var(--tape)}
+.hz-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:10px}
+.num{font:700 1.5rem "Barlow Condensed",sans-serif; display:flex; align-items:center; gap:10px}
+.num span.badge{background:#808080; color:#fff; width:34px; height:34px; display:grid; place-items:center; border-radius:3px; font-size:1.2rem}
+.chips{display:flex; flex-wrap:wrap; gap:6px; margin:4px 0 12px}
+.chip{border:1px solid var(--line); background:var(--field); color:var(--ink); border-radius:999px; padding:6px 12px; font:500 .95rem "Barlow",sans-serif; cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--tape); color:var(--tapeInk); border-color:var(--tape); font-weight:600}
+.photos{display:flex; gap:8px; flex-wrap:wrap; margin:6px 0 12px}
+.ph{position:relative; width:104px; height:104px; border-radius:8px; overflow:hidden; border:1px solid var(--line); background:var(--field); cursor:pointer; padding:0}
+.ph img{width:100%; height:100%; object-fit:cover; display:block}
+.ph .x{position:absolute; top:4px; right:4px; width:26px; height:26px; border-radius:50%; border:0; background:rgba(0,0,0,.65); color:#fff; font-size:16px; line-height:26px; cursor:pointer}
+.ph .mk{position:absolute; left:0; right:0; bottom:0; background:rgba(0,0,0,.55); color:#fff; font-size:.75rem; text-align:center; padding:2px 0}
+.addph{width:104px; height:104px; border:1.5px dashed var(--line); border-radius:8px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; color:var(--muted); background:none; cursor:pointer; font:500 .85rem "Barlow",sans-serif}
+.addph b{font-size:1.6rem; line-height:1; font-weight:400}
+.hint{color:var(--muted); font-size:.88rem; margin:0}
+.empty{text-align:center; padding:28px 12px; color:var(--muted)}
+.bar{position:fixed; left:0; right:0; bottom:0; background:var(--panel); border-top:1px solid var(--line); padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px)); z-index:5}
+.bar::before{content:""; position:absolute; left:0; right:0; top:-6px; height:6px; background:repeating-linear-gradient(-45deg,var(--tape) 0 12px,#1C272B 12px 24px)}
+.bar .in{max-width:760px; margin:0 auto; display:flex; gap:10px; align-items:center; justify-content:space-between}
+.bar .status{font-size:.9rem; color:var(--muted)}
+.bar .row{flex-wrap:nowrap}
+@media (max-width:440px){.bar .status{display:none}.bar .in{justify-content:flex-end}}
+.cat-s h3{font-size:1.2rem; margin:14px 0 8px}
+.cat-item{display:grid; grid-template-columns:1fr 1fr auto; gap:8px; margin-bottom:8px; align-items:start}
+@media (max-width:560px){.cat-item{grid-template-columns:1fr}}
+.toast{position:fixed; left:50%; transform:translateX(-50%); bottom:96px; background:var(--ink); color:var(--bg); padding:10px 16px; border-radius:8px; z-index:20; max-width:90vw; font-weight:500}
+/* editor */
+.ed{position:fixed; inset:0; background:#0E1416; z-index:30; display:flex; flex-direction:column; padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
+.ed .tools{display:flex; gap:8px; padding:10px 12px; flex-wrap:wrap; align-items:center; justify-content:space-between}
+.ed .tools .row .btn{background:#1D262A; color:#E7ECEC; border-color:#33424A}
+.ed .tools .btn[aria-pressed="true"]{background:var(--red); border-color:var(--red); color:#fff}
+.ed .stage{flex:1; display:flex; align-items:center; justify-content:center; overflow:hidden; padding:8px}
+.ed canvas{max-width:100%; max-height:100%; touch-action:none; background:#000}
+.ed .tip{color:#9AA8AC; font-size:.85rem; text-align:center; padding:0 12px 10px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+/* v2 */
+.sec{padding:0; overflow:hidden}
+.sec-head{padding:12px 16px; display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap}
+.sec-head .t{font:700 1.25rem "Barlow Condensed",sans-serif; letter-spacing:.01em}
+.sec-body{padding:14px 16px 16px}
+.sw{display:flex; gap:6px; flex-wrap:wrap; margin:8px 0 2px}
+.sw button{width:28px; height:28px; border-radius:6px; border:1px solid rgba(0,0,0,.25); cursor:pointer; padding:0}
+.sw button[aria-pressed="true"]{outline:3px solid var(--ink); outline-offset:2px}
+.ficha{border:1px solid var(--line); border-radius:10px; padding:12px; margin-bottom:12px; background:var(--field)}
+.ficha-top{display:flex; gap:12px; align-items:flex-start}
+.ficha-top .ph{width:132px; height:132px; flex:none}
+.ficha-meta{flex:1; min-width:0}
+.pg{font:600 .95rem "Barlow Condensed",sans-serif; color:var(--muted); margin:0 0 6px}
+.hzbox{border-top:1px dashed var(--line); margin-top:12px; padding-top:10px}
+.hzbox h4{margin:0 0 6px; font:600 1.05rem "Barlow Condensed",sans-serif; display:flex; justify-content:space-between; align-items:center}
+.sug{list-style:none; margin:4px 0 0; padding:0; border:1px solid var(--line); border-radius:8px; background:var(--panel); max-height:260px; overflow:auto}
+.sug li button{display:block; width:100%; text-align:left; border:0; border-bottom:1px solid var(--line); background:none; color:var(--ink); padding:8px 10px; font:inherit; font-size:.92rem; cursor:pointer}
+.sug li button small{display:block; color:var(--muted); font-size:.8rem}
+.sug li:last-child button{border-bottom:0}
+.prev{margin-top:12px; background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:10px 12px; font-size:.9rem}
+.prev b{font:600 .95rem "Barlow Condensed",sans-serif; color:var(--muted); display:block; margin-bottom:4px}
+.prev p{margin:2px 0}
+.addsec{display:flex; gap:8px; flex-wrap:wrap}
+.addsec select{flex:1; min-width:200px}
+.sub-row{display:grid; grid-template-columns:1fr auto auto; gap:8px; align-items:center; margin-top:8px}
+.colorpick{width:44px; height:38px; padding:2px; border-radius:8px}
+details.col summary{cursor:pointer; color:var(--muted); font-size:.88rem}
+.area-card{border:1px solid var(--line); border-radius:10px; padding:12px; margin-top:12px}
+#tema button[aria-pressed="true"]{background:var(--ink); color:var(--bg)}
+#tema button{font:600 .95rem "Barlow Condensed",sans-serif; border:0; background:none; color:var(--muted); padding:6px 10px; border-radius:7px; cursor:pointer}
+@media (max-width:520px){header.top{flex-direction:column; align-items:stretch}}
+.cel{position:fixed; inset:0; z-index:50; background:rgba(14,20,22,.72); display:flex; align-items:center; justify-content:center; padding:20px; overflow:hidden}
+.cel-box{position:relative; background:var(--panel); color:var(--ink); border-radius:16px; padding:28px 24px 22px; max-width:420px; width:100%; text-align:center; border-top:8px solid var(--tape); animation:pop .35s ease-out}
+.cel-box h2{font:700 2.2rem "Barlow Condensed",sans-serif; margin:10px 0 4px}
+.cel-num{font-weight:600; margin:0 0 12px}
+.cel-frase{font:500 1.1rem/1.4 "Barlow",sans-serif; margin:0 0 12px; color:var(--ink)}
+.cel-ic svg .chk{stroke-dasharray:90; stroke-dashoffset:90; animation:draw .6s .2s ease-out forwards}
+.conf{position:absolute; inset:0; pointer-events:none}
+.conf i{position:absolute; top:-12px; width:9px; height:14px; border-radius:2px; animation:fall 2.4s ease-in forwards}
+@keyframes fall{to{top:105%; opacity:.2}}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes pop{from{transform:scale(.9); opacity:0}to{transform:none; opacity:1}}
+@media (prefers-reduced-motion:reduce){.conf{display:none}.cel-ic svg .chk{stroke-dashoffset:0; animation:none}.cel-box{animation:none}}
+.pie{max-width:760px; margin:28px auto 0; padding:14px 4px 0; border-top:1px solid var(--line); color:var(--muted); font-size:.82rem; line-height:1.5; text-align:center}
+.pie p{margin:2px 0}
+.pie strong{font-weight:600; color:var(--ink)}
+
+.home{display:grid; gap:14px; margin-top:8px}
+a.go{display:block; text-decoration:none; color:var(--ink); background:var(--panel); border:1px solid var(--line); border-left:8px solid var(--tape); border-radius:12px; padding:18px 18px 16px}
+a.go:hover, a.go:focus-visible{border-color:var(--ink); outline:none}
+a.go h2{font:700 1.6rem "Barlow Condensed",sans-serif; margin:0 0 2px}
+a.go .quien{font:600 .95rem "Barlow Condensed",sans-serif; color:var(--muted); margin:0 0 8px}
+a.go p{margin:0; color:var(--muted)}
+a.go.lev{border-left-color:var(--ok)}
+.flujo{margin-top:18px}
+.flujo ol{margin:6px 0 0; padding-left:20px; color:var(--muted)}
+.flujo li{margin:4px 0}
+.instalar{display:none}
+</style>
+</head>
+<body>
+<div class="wrap" style="padding-bottom:40px">
+  <header class="top">
+    <div>
+      <h1>5S EMEMSA</h1>
+      <p>Inspección y levantamiento de observaciones con el formato E-FSIG 022.</p>
+    </div>
+    <div class="tabs" role="group" aria-label="Apariencia" id="tema">
+      <button type="button" data-t="light" aria-pressed="false">☀ Claro</button>
+      <button type="button" data-t="dark" aria-pressed="false">☾ Oscuro</button>
+    </div>
+  </header>
+  <main class="home">
+    <a class="go" href="inspeccion.html">
+      <h2>Reporte de inspección</h2>
+      <p class="quien">Para el auditor</p>
+      <p>Toma las fotos del ANTES, registra los hallazgos por sub-área y genera el Word del informe.</p>
+    </a>
+    <a class="go lev" href="levantamiento.html">
+      <h2>Levantamiento de observaciones</h2>
+      <p class="quien">Para el facilitador del área</p>
+      <p>Carga el Word que te enviaron, toma las fotos del DESPUÉS y genera el Word levantado.</p>
+    </a>
+    <section class="card flujo">
+      <h2 style="margin-bottom:4px">¿Cómo funciona?</h2>
+      <ol>
+        <li>El auditor inspecciona y genera el informe en Word.</li>
+        <li>La jefa de 5S envía el informe a cada área.</li>
+        <li>El facilitador levanta las observaciones y envía el Word a auxiliar5s@ememsa.pe.</li>
+      </ol>
+      <p class="hint" style="margin-top:12px">Consejo: en el celular, usa “Agregar a pantalla de inicio” para abrirla como una app. Después de abrirla una vez, funciona aunque no haya señal.</p>
+    </section>
+  </main>
+  <footer class="pie">
+    <p>¿Dudas o sugerencias? Escríbenos a <a href="mailto:auxiliar5s@ememsa.pe" style="color:inherit;font-weight:600">auxiliar5s@ememsa.pe</a>.</p>
+  </footer>
+</div>
+<script>
+function temaActual(){var t=document.documentElement.getAttribute("data-theme");if(t)return t;return matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}
+function pintarTema(){var t=temaActual();document.querySelectorAll("#tema button").forEach(function(b){b.setAttribute("aria-pressed",b.dataset.t===t?"true":"false")})}
+document.querySelectorAll("#tema button").forEach(function(b){b.addEventListener("click",function(){document.documentElement.setAttribute("data-theme",b.dataset.t);try{localStorage.setItem("tema",b.dataset.t)}catch(e){}pintarTema()})});
+pintarTema();
+</script>
+<script>if("serviceWorker" in navigator&&location.protocol!=="file:"){addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}</script>
+</body>
+</html>
