@@ -296,7 +296,7 @@ function fmtFecha(iso){if(!iso)return "";var p=iso.split("-");return p[2]+"/"+p[
 function h(tag,attrs){var el=document.createElement(tag);attrs=attrs||{};for(var k in attrs){var v=attrs[k];if(v==null||v===false)continue;
  if(k==="text")el.textContent=v;else if(k.slice(0,2)==="on")el.addEventListener(k.slice(2),v);else if(k==="value")el.value=v;else el.setAttribute(k,v===true?"":v)}
  for(var i=2;i<arguments.length;i++){var c=arguments[i];if(c==null||c===false)continue;if(Array.isArray(c))c.forEach(function(x){x&&el.appendChild(x)});else el.appendChild(typeof c==="string"?document.createTextNode(c):c)}return el}
-function toast(msg){var t=h("div",{class:"toast",role:"status",text:msg});document.body.appendChild(t);setTimeout(function(){t.remove()},3500)}
+function toast(msg){var t=h("div",{class:"toast",role:"status",text:msg});document.body.appendChild(t);setTimeout(function(){t.remove()},Math.max(3500,msg.length*60))}
 function field(label,input,cls){return h("label",{class:"f"+(cls?" "+cls:"")},label,input)}
 function textOn(hex){var r=parseInt(hex.slice(0,2),16),g=parseInt(hex.slice(2,4),16),b=parseInt(hex.slice(4,6),16);return (0.299*r+0.587*g+0.114*b)<140?"FFFFFF":"000000"}
 function frase(t){t=(t||"").trim();if(t&&!/[.!?]$/.test(t))t+=".";return t}
@@ -308,7 +308,8 @@ var DOC=null, INFO=null, L=null, photoSrc={}, thumbs={}, antesURLs=[];
 var saveT=null;function flush(){clearTimeout(saveT);saveT=null;if(L)kvSet("estado",JSON.stringify(L))}
 function save(){clearTimeout(saveT);saveT=setTimeout(flush,400);status()}
 addEventListener("pagehide",function(){if(saveT)flush()});document.addEventListener("visibilitychange",function(){if(document.visibilityState==="hidden"&&saveT)flush()});
-function hzCompleto(x){return x.fotos.length>0&&x.d.trim().length>0}
+function hzCompleto(x){return x.fotos.length>0&&x.d.trim().length>0&&(x.obs||"").trim().length>0}
+function faltaDe(x){var f=[];if(!x.fotos.length)f.push("foto");if(!x.d.trim())f.push("descripción de la mejora");if(!(x.obs||"").trim())f.push("observaciones");return f}
 function totales(){var t=0,c=0;L.hojas.forEach(function(hj){hj.hallazgos.forEach(function(x){t++;if(hzCompleto(x))c++})});return {t:t,c:c}}
 function status(){if(!L)return;var r=totales();document.getElementById("status").textContent=r.c+" de "+r.t+" hallazgos completos";
   var p=document.getElementById("progBar");if(p)p.style.width=(r.t?Math.round(100*r.c/r.t):0)+"%";
@@ -400,6 +401,7 @@ function viewDatos(){var c=INFO.cab;
       h("dt",{text:"Fecha del antes"}),h("dd",{text:c.fecha||"—"}),h("dt",{text:"Auditor"}),h("dd",{text:c.inspector||"—"}),h("dt",{text:"Archivo"}),h("dd",{text:L.nombre})),
     h("div",{class:"grid"},
       field("Fecha del levantamiento",h("input",{type:"date",value:L.fecha,onchange:function(){L.fecha=this.value;save()}}))),
+    h("p",{class:"hint",style:"margin-top:10px",text:"Para generar el Word, cada hallazgo debe tener foto del después, descripción de la mejora y observaciones."}),
     h("div",{style:"margin-top:14px"},h("div",{class:"prog"},h("i",{id:"progBar",style:"width:0"})),h("p",{class:"hint",id:"progTxt"})));
 }
 function viewHoja(hj,lh,i){
@@ -413,8 +415,8 @@ function viewHz(hj,a,x,k){
   var tag=h("span",{class:"ok-tag"+(hzCompleto(x)?" ok":""),text:hzCompleto(x)?"Completo":"Pendiente"});
   function upd(){var ok=hzCompleto(x);tag.className="ok-tag"+(ok?" ok":"");tag.textContent=ok?"Completo":"Pendiente";save()}
   var desc=h("textarea",{rows:"3",value:x.d,placeholder:"Se realizó…",oninput:function(){x.d=this.value;upd()}});
-  var obs=h("textarea",{rows:"2",value:x.obs,placeholder:"Opcional",oninput:function(){x.obs=this.value;upd()}});
-  return h("div",{class:"ficha"},
+  var obs=h("textarea",{rows:"2",value:x.obs,placeholder:"Escribe una observación",oninput:function(){x.obs=this.value;upd()}});
+  return h("div",{class:"ficha","data-hz":hj.i+"-"+k},
     h("div",{class:"hz-head",style:"margin-bottom:8px"},h("div",{class:"num",style:"font-size:1.2rem"},h("span",{class:"badge",style:"width:28px;height:28px;font-size:1rem",text:String(k+1)}),"Hallazgo"),tag),
     h("div",{class:"antes"},h("p",null,h("b",{text:"S:"}),a.s||"—"),h("p",null,h("b",{text:"Hallazgo:"}),a.d||"—"),h("p",null,h("b",{text:"Recomendación:"}),a.r||"—")),
     h("p",{class:"hint",text:"Foto del después (máx. 2)"}),
@@ -435,7 +437,7 @@ var FRASES=[
  "Un lugar para cada cosa y cada cosa en su lugar. ¡Gracias por tu compromiso!",
  "La mejora continua se construye con acciones como esta.",
  "Tu área da el ejemplo. ¡Sigamos así!"];
-function celebrar(c,t){
+function celebrar(c,t){c=t;
   var frase=FRASES[Math.floor(Math.random()*FRASES.length)], completo=c===t;
   var colores=["#F2B705","#2E7D5B","#0070C0","#EE0000","#7030A0","#00B050"];
   var conf=h("div",{class:"conf","aria-hidden":"true"});
@@ -456,7 +458,10 @@ function celebrar(c,t){
 async function generar(){
   var r=totales();
   if(!L.fecha){toast("Indica la fecha del levantamiento.");return}
-  if(r.c<r.t&&!confirm("Hay "+(r.t-r.c)+" hallazgos pendientes. Se generará el Word con lo avanzado. ¿Continuar?"))return;
+  if(r.c<r.t){var pi=-1,pk=-1;L.hojas.some(function(hj,i){return hj.hallazgos.some(function(x,k){if(!hzCompleto(x)){pi=i;pk=k;return true}})});
+    var falta=faltaDe(L.hojas[pi].hallazgos[pk]);
+    toast("No se puede generar aún: "+(r.t-r.c)+(r.t-r.c===1?" hallazgo incompleto":" hallazgos incompletos")+". En la hoja "+(pi+1)+", hallazgo "+(pk+1)+" falta: "+falta.join(", ")+".");
+    var el=document.querySelector('[data-hz="'+pi+"-"+pk+'"]');if(el)el.scrollIntoView({behavior:"smooth",block:"start"});return}
   flush();
   var b=document.getElementById("btnGen");b.disabled=true;b.textContent="Generando…";
   try{
