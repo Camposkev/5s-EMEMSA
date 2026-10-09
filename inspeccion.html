@@ -151,6 +151,7 @@ details.col summary{cursor:pointer; color:var(--muted); font-size:.88rem}
 .area-sug{position:absolute; left:0; right:0; top:calc(100% + 4px); z-index:15; box-shadow:0 8px 24px rgba(0,0,0,.18)}
 .area-sug button.on,.area-sug button:hover{background:var(--field)}
 .area-sug button[aria-selected="true"]{font-weight:600}
+@media (max-width:400px){.bar .btn{padding:9px 10px; font-size:.95rem}.bar .row{gap:6px}}
 </style>
 </head>
 <body>
@@ -177,6 +178,7 @@ details.col summary{cursor:pointer; color:var(--muted); font-size:.88rem}
   <span class="status" id="status"></span>
   <div class="row">
     <button class="btn ghost" id="btnNuevo">Nuevo reporte</button>
+    <button class="btn" id="btnZip" title="Descargar fotos originales sin marcas">Fotos (ZIP)</button>
     <button class="btn primary" id="btnGen">Generar Word</button>
   </div>
 </div></div>
@@ -402,7 +404,7 @@ function viewReporte(){
       if(sel.value==="otra"){var n=otra.value.trim().toUpperCase();if(!n){toast("Escribe el nombre de la sub-área.");return}addSeccion(n)}
       else if(sel.value==="area"){addSeccion(am.a,"DEEAF6")}
       else{var s=subs[+sel.value];addSeccion(s.n,s.c)}}}))));
-  if(R.secciones.length)frag.appendChild(h("section",{class:"card"},h("h2",{text:"Fotos originales para evidencia"}),
+  frag.appendChild(h("section",{class:"card"},h("h2",{text:"Fotos originales para evidencia"}),
     h("p",{class:"hint",style:"margin-bottom:10px",text:"Envíalo junto con el Word."}),
     h("button",{class:"btn",text:"Descargar fotos (ZIP)",onclick:function(){descargarFotos(this)}})));
   return frag;
@@ -582,6 +584,7 @@ async function generar(){
   function done(){if(R.numero>prefs.ultimo)prefs.ultimo=R.numero;save();var nh=0,nf=0;R.secciones.forEach(function(s){nh+=s.hallazgos.length;nf+=nFotos(s)});celebrar(nh,R.secciones.length,nf)}
 }
 document.getElementById("btnGen").addEventListener("click",generar);
+document.getElementById("btnZip").addEventListener("click",function(){descargarFotos(this)});
 document.getElementById("btnNuevo").addEventListener("click",function(){if(confirm("Se borrará el reporte actual (datos y fotos). ¿Continuar?")){
   R.secciones.forEach(function(s){s.hallazgos.forEach(function(x){x.fotos.forEach(function(f){kvDel("ph:"+f.id)})})});photoSrc={};thumbs={};R=newReport();save();render();scrollTo(0,0)}});
 document.querySelectorAll("nav.tabs button").forEach(function(b){b.addEventListener("click",function(){tab=b.dataset.tab;render();scrollTo(0,0)})});
