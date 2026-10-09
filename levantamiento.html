@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="5S EMEMSA">
-<title>Levantamiento de observaciones 5S</title>
+<title>Subsanación de observaciones 5S</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
@@ -170,8 +170,8 @@ ol.pasos{margin:8px 0 0; padding-left:20px; color:var(--muted); font-size:.95rem
 <div class="wrap">
   <header class="top">
     <div>
-      <h1>Levantamiento de observaciones 5S</h1>
-      <p>Completa la columna DESPUÉS del informe y descarga el Word levantado.</p>
+      <h1>Subsanación de observaciones 5S</h1>
+      <p>Completa la columna DESPUÉS del informe y descarga el Word subsanado.</p>
     </div>
     <div class="tabs" role="group" aria-label="Apariencia" id="tema">
       <button type="button" data-t="light" aria-pressed="false">☀ Claro</button>
@@ -330,7 +330,7 @@ async function cargarDoc(bytes,nombre,nuevo){
 document.getElementById("fileDoc").addEventListener("change",async function(e){var f=e.target.files[0];e.target.value="";if(!f)return;
   if(!/\.docx$/i.test(f.name)){toast("Elige el archivo Word (.docx) que te enviaron.");return}
   try{var bytes=new Uint8Array(await f.arrayBuffer());
-    if(L&&L.hojas.some(function(hj){return hj.hallazgos.some(function(x){return x.fotos.length||x.d})})&&!confirm("Se reemplazará el levantamiento en curso de "+L.nombre+". ¿Continuar?"))return;
+    if(L&&L.hojas.some(function(hj){return hj.hallazgos.some(function(x){return x.fotos.length||x.d})})&&!confirm("Se reemplazará la subsanación en curso de "+L.nombre+". ¿Continuar?"))return;
     if(L)L.hojas.forEach(function(hj){hj.hallazgos.forEach(function(x){x.fotos.forEach(function(p){kvDel("ph:"+p.id)})})});photoSrc={};thumbs={};
     await cargarDoc(bytes,f.name,true);render();scrollTo(0,0)}
   catch(err){console.error(err);toast(err.message&&err.message.indexOf("No se encontraron")===0?err.message:"No se pudo leer el Word. Verifica que sea el informe 5S en formato .docx.")}});
@@ -400,7 +400,7 @@ function viewDatos(){var c=INFO.cab;
     h("dl",{class:"ro"},h("dt",{text:"Área"}),h("dd",{text:c.area||"—"}),h("dt",{text:"N° de informe"}),h("dd",{text:c.numero||"—"}),
       h("dt",{text:"Fecha del antes"}),h("dd",{text:c.fecha||"—"}),h("dt",{text:"Auditor"}),h("dd",{text:c.inspector||"—"}),h("dt",{text:"Archivo"}),h("dd",{text:L.nombre})),
     h("div",{class:"grid"},
-      field("Fecha del levantamiento",h("input",{type:"date",value:L.fecha,onchange:function(){L.fecha=this.value;save()}}))),
+      field("Fecha de la subsanación",h("input",{type:"date",value:L.fecha,onchange:function(){L.fecha=this.value;save()}}))),
     h("p",{class:"hint",style:"margin-top:10px",text:"Para generar el Word, cada hallazgo debe tener foto del después, descripción de la mejora y observaciones."}),
     h("div",{style:"margin-top:14px"},h("div",{class:"prog"},h("i",{id:"progBar",style:"width:0"})),h("p",{class:"hint",id:"progTxt"})));
 }
@@ -432,7 +432,7 @@ function viewHz(hj,a,x,k){
 
 /* ---------- mensaje final ---------- */
 var FRASES=[
- "Cada observación levantada hace del área un lugar más seguro, ordenado y limpio.",
+ "Cada observación subsanada hace del área un lugar más seguro, ordenado y limpio.",
  "Las 5S no son un evento: son un hábito. Hoy lo demostraste.",
  "Un lugar para cada cosa y cada cosa en su lugar. ¡Gracias por tu compromiso!",
  "La mejora continua se construye con acciones como esta.",
@@ -447,7 +447,7 @@ function celebrar(c,t){c=t;
   var ov=h("div",{class:"cel",role:"dialog","aria-modal":"true","aria-labelledby":"celT"},conf,
     h("div",{class:"cel-box"},ic,
       h("h2",{id:"celT",text:completo?"¡Buen trabajo!":"¡Buen avance!"}),
-      h("p",{class:"cel-num",text:completo?"Levantaste los "+t+" hallazgos del informe.":"Levantaste "+c+" de "+t+" hallazgos. Completa los pendientes antes de la fecha límite."}),
+      h("p",{class:"cel-num",text:completo?(t===1?"Subsanaste el hallazgo del informe.":"Subsanaste los "+t+" hallazgos del informe."):"Subsanaste "+c+" de "+t+" hallazgos. Completa los pendientes antes de la fecha límite."}),
       h("p",{class:"cel-frase",text:"“"+frase+"”"}),
       h("p",{class:"hint"},conCorreo("El Word quedó guardado en tu dispositivo. Envíalo al siguiente correo:")),
       h("button",{class:"btn primary",style:"margin-top:14px",text:"Cerrar",onclick:function(){ov.remove()}})));
@@ -457,7 +457,7 @@ function celebrar(c,t){c=t;
 /* ---------- generar ---------- */
 async function generar(){
   var r=totales();
-  if(!L.fecha){toast("Indica la fecha del levantamiento.");return}
+  if(!L.fecha){toast("Indica la fecha de la subsanación.");return}
   if(r.c<r.t){var pi=-1,pk=-1;L.hojas.some(function(hj,i){return hj.hallazgos.some(function(x,k){if(!hzCompleto(x)){pi=i;pk=k;return true}})});
     var falta=faltaDe(L.hojas[pi].hallazgos[pk]);
     toast("No se puede generar aún: "+(r.t-r.c)+(r.t-r.c===1?" hallazgo incompleto":" hallazgos incompletos")+". En la hoja "+(pi+1)+", hallazgo "+(pk+1)+" falta: "+falta.join(", ")+".");
@@ -474,8 +474,8 @@ async function generar(){
       datos.hojas.push({hallazgos:hs})}
     var zip=await LEV.llenar(JSZip,DOC,datos);
     var out=await zip.generateAsync({type:"blob",mimeType:"application/vnd.openxmlformats-officedocument.wordprocessingml.document"});
-    var base=L.nombre.replace(/\.docx$/i,"").replace(/_LEVANTADO.*$/,"");
-    var name=base+"_LEVANTADO.docx";
+    var base=L.nombre.replace(/\.docx$/i,"").replace(/_(LEVANTADO|SUBSANADO).*$/,"");
+    var name=base+"_SUBSANADO.docx";
     var dl=(window.claude&&window.claude.use)?await window.claude.use("downloads").catch(function(){return null}):null;
     if(dl){try{await dl.save({filename:name,data:out});celebrar(r.c,r.t)}catch(e){toast(e&&e.code==="declined"?"Descarga cancelada.":"No se pudo guardar el archivo aquí ("+(e&&e.code||"error")+").")}}
     else{var a=document.createElement("a");a.href=URL.createObjectURL(out);a.download=name;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},2000);celebrar(r.c,r.t)}
