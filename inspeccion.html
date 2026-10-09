@@ -146,6 +146,11 @@ details.col summary{cursor:pointer; color:var(--muted); font-size:.88rem}
 .pie{max-width:760px; margin:28px auto 0; padding:14px 4px 0; border-top:1px solid var(--line); color:var(--muted); font-size:.82rem; line-height:1.5; text-align:center}
 .pie p{margin:2px 0}
 .pie strong{font-weight:600; color:var(--ink)}
+.area-box{position:relative}
+.area-in{padding-right:36px; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%235D6B70' stroke-width='2'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 12px center; cursor:pointer}
+.area-sug{position:absolute; left:0; right:0; top:calc(100% + 4px); z-index:15; box-shadow:0 8px 24px rgba(0,0,0,.18)}
+.area-sug button.on,.area-sug button:hover{background:var(--field)}
+.area-sug button[aria-selected="true"]{font-weight:600}
 </style>
 </head>
 <body>
@@ -338,17 +343,43 @@ function areaMaster(){return areas.find(function(a){return a.a===R.area})}
 function addSeccion(titulo,color){R.secciones.push({id:uid(),titulo:titulo,color:color||PALETA[(R.secciones.length+1)%PALETA.length],hallazgos:[]});save();render();
   setTimeout(function(){var c=document.querySelectorAll(".sec");c[c.length-1]&&c[c.length-1].scrollIntoView({behavior:"smooth",block:"start"})},50)}
 
+/* al cambiar de área: quita hojas vacías y adapta la hoja automática de oficinas */
+function aplicarSecciones(nueva,antes){
+  R.secciones=R.secciones.filter(function(s){return s.hallazgos.length>0});
+  if(!nueva)return;
+  if(!nueva.subs.length){
+    var auto=R.secciones.find(function(s){return s.titulo===antes});
+    if(auto){auto.titulo=nueva.a;auto.color="DEEAF6"}
+    else if(!R.secciones.some(function(s){return s.titulo===nueva.a}))R.secciones.unshift({id:uid(),titulo:nueva.a,color:"DEEAF6",hallazgos:[]});
+  }
+  if(R.secciones.length&&R.secciones.some(function(s){return s.titulo!==nueva.a}))
+    setTimeout(function(){toast("Se mantuvieron las hojas que ya tienen fotos. Quítalas si no corresponden a esta área.")},50);
+}
 function viewReporte(){
   var frag=document.createDocumentFragment();
   var am=areaMaster();
   function norm(t){return sinTildes(t).replace(/\s+/g," ").trim()}
   function buscarArea(v){var n=norm(v);return n?areas.find(function(a){return norm(a.a)===n}):null}
-  function refocus(){var i=document.getElementById("areaIn");if(i){i.focus();var l=i.value.length;try{i.setSelectionRange(l,l)}catch(e){}}}
-  var areaSel=h("div",null,h("input",{id:"areaIn",list:"listaAreas",value:R.area,placeholder:"Escribe o elige el área",autocomplete:"off",
-      oninput:function(){var a=buscarArea(this.value),antes=areaMaster();
-        if(a){if(antes!==a){R.area=a.a;R.jefe=a.j;save();if(!a.subs.length&&!R.secciones.length)addSeccion(a.a,"DEEAF6");else render();refocus()}}
-        else{R.area=this.value.toUpperCase();if(antes){R.jefe="";save();render();refocus()}else save()}}}),
-    h("datalist",{id:"listaAreas"},areas.map(function(a){return h("option",{value:a.a,label:a.j})})));
+  var lista=h("ul",{class:"sug area-sug",role:"listbox",hidden:true}),activo=-1,opciones=[];
+  var areaIn=h("input",{id:"areaIn",class:"area-in",value:R.area,placeholder:"Escribe o elige el área",autocomplete:"off",role:"combobox","aria-expanded":"false","aria-autocomplete":"list",
+    onfocus:function(){mostrar(true)},onclick:function(){mostrar(true)},
+    oninput:function(){R.area=this.value.toUpperCase();save();mostrar(false)},
+    onkeydown:function(e){if(lista.hidden)return;
+      if(e.key==="ArrowDown"||e.key==="ArrowUp"){e.preventDefault();activo=(activo+(e.key==="ArrowDown"?1:-1)+opciones.length)%opciones.length;pintar()}
+      else if(e.key==="Enter"){e.preventDefault();if(activo>=0&&opciones[activo])elegir(opciones[activo]);else confirmar()}
+      else if(e.key==="Escape"){cerrar()}},
+    onblur:function(){setTimeout(function(){if(!lista.hidden){cerrar();confirmar()}},150)}});
+  function mostrar(todas){var q=norm(areaIn.value),exacta=buscarArea(areaIn.value);
+    opciones=areas.filter(function(a){return todas&&exacta||!q||norm(a.a).indexOf(q)>=0});activo=-1;lista.textContent="";
+    if(!opciones.length){lista.appendChild(h("li",null,h("button",{type:"button",disabled:true,text:"Sin coincidencias: se usará el nombre escrito."})))}
+    opciones.forEach(function(a){lista.appendChild(h("li",null,h("button",{type:"button",role:"option","aria-selected":a.a===R.area?"true":"false",text:a.a,
+      onmousedown:function(e){e.preventDefault()},onclick:function(){elegir(a)}})))});
+    lista.hidden=false;areaIn.setAttribute("aria-expanded","true")}
+  function pintar(){[].forEach.call(lista.querySelectorAll("button"),function(b,k){b.classList.toggle("on",k===activo);if(k===activo)b.scrollIntoView({block:"nearest"})})}
+  function cerrar(){lista.hidden=true;areaIn.setAttribute("aria-expanded","false")}
+  function confirmar(){var a=buscarArea(areaIn.value);if(a)elegir(a);else if(areaMaster()===undefined&&am){R.jefe="";aplicarSecciones(null);save();render()}}
+  function elegir(a){cerrar();if(R.area===a.a&&areaMaster()===a){areaIn.value=a.a;return}var antes=R.area;R.area=a.a;R.jefe=a.j;aplicarSecciones(a,antes);save();render()}
+  var areaSel=h("div",{class:"area-box"},areaIn,lista);
   frag.appendChild(h("section",{class:"card"},h("h2",{text:"Datos del reporte"}),
     h("div",{class:"grid"},
       field("Proyecto",h("input",{value:R.proyecto,oninput:function(){R.proyecto=this.value;save()}}),"full"),
