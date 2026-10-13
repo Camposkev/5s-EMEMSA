@@ -242,6 +242,7 @@ async function kvDel(k){delete mem[k];try{var d=await getDb();if(d)d.transaction
 function uid(){return Math.random().toString(36).slice(2,10)}
 function today(){var d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
 function fmtFecha(iso){if(!iso)return "";var p=iso.split("-");return p[2]+"/"+p[1]+"/"+p[0]}
+var AUDITORES=["ANTONY NINAMANCCO", "BRYAN BAZÁN", "DAVID HUAMAN", "D’ESTEFANO VASQUEZ", "EDU APARICIO", "JONATHAN SANCHEZ", "JOSE QUISPE", "KEVIN CAMPOS", "LEANDRO YANARICO", "LUIS ANGLAS", "MAITTE GUILLÉN"];
 var prefs={inspector:"",ultimo:37};
 function seedAreas(){return SEEDS.areas.map(function(a){return {id:uid(),a:a.a,j:a.j,auto:!!a.auto,subs:a.subs.map(function(s){return {n:s.n,c:s.c}})}})}
 var areas=seedAreas();
@@ -382,6 +383,27 @@ function viewReporte(){
   function confirmar(){var a=buscarArea(areaIn.value);if(a)elegir(a);else if(R.aplicada){R.aplicada="";R.jefe="";aplicarSecciones(null);save();render()}}
   function elegir(a){cerrar();if(R.aplicada===a.a&&R.area===a.a){areaIn.value=a.a;return}var antes=R.aplicada||"";R.area=a.a;R.aplicada=a.a;R.jefe=a.j;aplicarSecciones(a,antes);save();render()}
   var areaSel=h("div",{class:"area-box"},areaIn,lista);
+  /* encargado: lista de auditores con búsqueda */
+  function normP(t){return norm(t).replace(/[’'`´.]/g,"")}
+  var listaI=h("ul",{class:"sug area-sug",role:"listbox",hidden:true}),actI=-1,optI=[];
+  var inspIn=h("input",{id:"inspIn",class:"area-in",value:R.inspector,placeholder:"Escribe o elige tu nombre",autocomplete:"off",role:"combobox","aria-expanded":"false","aria-autocomplete":"list",
+    onfocus:function(){abrirI(true)},onclick:function(){abrirI(true)},
+    oninput:function(){R.inspector=this.value;prefs.inspector=this.value;save();abrirI(false)},
+    onkeydown:function(e){if(listaI.hidden)return;
+      if(e.key==="ArrowDown"||e.key==="ArrowUp"){e.preventDefault();if(!optI.length)return;actI=(actI+(e.key==="ArrowDown"?1:-1)+optI.length)%optI.length;
+        [].forEach.call(listaI.querySelectorAll("button"),function(b,k){b.classList.toggle("on",k===actI);if(k===actI)b.scrollIntoView({block:"nearest"})})}
+      else if(e.key==="Enter"){e.preventDefault();if(actI>=0&&optI[actI])elegirI(optI[actI]);else cerrarI()}
+      else if(e.key==="Escape"){cerrarI()}},
+    onblur:function(){setTimeout(function(){if(!listaI.hidden){cerrarI();var q=normP(inspIn.value),m=AUDITORES.find(function(n){return normP(n)===q});if(m)elegirI(m)}},150)}});
+  function abrirI(todas){var q=normP(inspIn.value),exacta=AUDITORES.some(function(n){return normP(n)===q});
+    optI=AUDITORES.filter(function(n){return todas&&exacta||!q||normP(n).indexOf(q)>=0});actI=-1;listaI.textContent="";
+    if(!optI.length)listaI.appendChild(h("li",null,h("button",{type:"button",disabled:true,text:"Sin coincidencias: se usará el nombre escrito."})));
+    optI.forEach(function(n){listaI.appendChild(h("li",null,h("button",{type:"button",role:"option","aria-selected":n===R.inspector?"true":"false",text:n,
+      onmousedown:function(e){e.preventDefault()},onclick:function(){elegirI(n)}})))});
+    listaI.hidden=false;inspIn.setAttribute("aria-expanded","true")}
+  function cerrarI(){listaI.hidden=true;inspIn.setAttribute("aria-expanded","false")}
+  function elegirI(n){cerrarI();inspIn.value=n;R.inspector=n;prefs.inspector=n;save()}
+  var inspSel=h("div",{class:"area-box"},inspIn,listaI);
   frag.appendChild(h("section",{class:"card"},h("h2",{text:"Datos del reporte"}),
     h("div",{class:"grid"},
       field("Proyecto",h("input",{value:R.proyecto,oninput:function(){R.proyecto=this.value;save()}}),"full"),
@@ -389,7 +411,7 @@ function viewReporte(){
       field("Fecha de inspección",h("input",{type:"date",value:R.fecha,onchange:function(){R.fecha=this.value;save()}})),
       field("Inspección para",areaSel,"full"),
       field("Jefe del área",h("input",{value:R.jefe,oninput:function(){R.jefe=this.value;save()}})),
-      field("Encargado de la inspección",h("input",{value:R.inspector,oninput:function(){R.inspector=this.value;prefs.inspector=this.value;save()}})))));
+      field("Encargado de la inspección",inspSel))));
   R.secciones.forEach(function(sec,si){frag.appendChild(viewSeccion(sec,si))});
   // agregar sub-área
   var subs=am?am.subs:[];
