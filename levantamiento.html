@@ -398,7 +398,7 @@ function viewCarga(){
 function viewDatos(){var c=INFO.cab;
   return h("section",{class:"card"},h("h2",{text:"Informe"}),
     h("dl",{class:"ro"},h("dt",{text:"Área"}),h("dd",{text:c.area||"—"}),h("dt",{text:"N° de informe"}),h("dd",{text:c.numero||"—"}),
-      h("dt",{text:"Fecha del antes"}),h("dd",{text:c.fecha||"—"}),h("dt",{text:"Auditor"}),h("dd",{text:c.inspector||"—"}),h("dt",{text:"Archivo"}),h("dd",{text:L.nombre})),
+      h("dt",{text:"Fecha del antes"}),h("dd",{text:c.fecha||"—"}),h("dt",{text:"Inspección realizada por"}),h("dd",{text:c.inspector||"—"}),h("dt",{text:"Archivo"}),h("dd",{text:L.nombre})),
     h("div",{class:"grid"},
       field("Fecha de la subsanación",h("input",{type:"date",value:L.fecha,onchange:function(){L.fecha=this.value;save()}}))),
     h("p",{class:"hint",style:"margin-top:10px",text:"Para generar el Word, cada hallazgo debe tener foto del después, descripción de la mejora y observaciones."}),

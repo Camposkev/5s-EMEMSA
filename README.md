@@ -4,7 +4,7 @@ Apps web para la inspección 5S (auditor) y el levantamiento de observaciones (f
 
 - `index.html`: página de inicio con acceso a las dos apps.
 - `inspeccion.html`: reporte de inspección (ANTES).
-- `levantamiento.html`: levantamiento de observaciones (DESPUÉS).
+- `levantamiento.html`: subsanación de observaciones (DESPUÉS).
 - `sw.js`: permite usar las apps sin señal después de abrirlas una vez.
 
 Los datos, fotos y reportes se procesan y guardan solo en el dispositivo de cada usuario. No se envían a ningún servidor.

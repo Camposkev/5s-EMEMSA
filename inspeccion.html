@@ -514,7 +514,7 @@ function viewAreas(){
     h("button",{class:"btn ghost",text:"Restaurar áreas base",onclick:function(){if(confirm("Se reemplazarán tus áreas por las áreas base.")){areas=seedAreas();save();render()}}})));
   wrap.appendChild(h("div",{class:"area-card",style:"margin-top:18px"},
     h("h3",{class:"cond",style:"margin:0 0 4px;font-size:1.2rem",text:"Compartir configuración"}),
-    h("p",{class:"hint",text:"Exporta áreas, jefes y sub-áreas en un archivo para que todos los auditores usen la misma versión. Quien lo importa reemplaza su configuración."}),
+    h("p",{class:"hint",text:"Exporta áreas, jefes y sub-áreas en un archivo para que todo el equipo auditor use la misma versión. Quien lo importa reemplaza su configuración."}),
     h("div",{class:"row",style:"margin-top:10px"},
       h("button",{class:"btn",text:"Exportar configuración",onclick:exportarConfig}),
       h("button",{class:"btn",text:"Importar configuración",onclick:function(){document.getElementById("fileCfg").click()}}))));
