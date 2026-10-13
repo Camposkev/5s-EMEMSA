@@ -152,6 +152,10 @@ details.col summary{cursor:pointer; color:var(--muted); font-size:.88rem}
 .area-sug button.on,.area-sug button:hover{background:var(--field)}
 .area-sug button[aria-selected="true"]{font-weight:600}
 @media (max-width:400px){.bar .btn{padding:9px 10px; font-size:.95rem}.bar .row{gap:6px}}
+.hoja-sep{display:flex; align-items:center; gap:10px; margin:6px 0 10px}
+.hoja-sep::after{content:""; flex:1; height:1px; background:var(--line)}
+.hoja-tag{font:700 1.05rem "Barlow Condensed",sans-serif; background:var(--ink); color:var(--bg); padding:3px 12px; border-radius:6px}
+.hoja-info{font-size:.85rem; color:var(--muted)}
 </style>
 </head>
 <body>
@@ -438,7 +442,12 @@ function viewSeccion(sec,si){
     h("div",{class:"grid"},field("Título en el reporte",titulo,"full")),
     h("details",{class:"col"},h("summary",{text:"Color del título"}),h("div",{class:"sw"},PALETA.map(function(c){return h("button",{style:"background:#"+c,"aria-label":"Color "+c,"aria-pressed":sec.color===c,onclick:function(){sec.color=c;save();render()}})}))),
     h("div",{style:"height:12px"}));
-  sec.hallazgos.forEach(function(hz,j){body.appendChild(viewHallazgo(sec,hz,j))});
+  var hojasSec=paginar(sec);
+  sec.hallazgos.forEach(function(hz,j){var p=posicion(sec,hz);
+    if(p.num===1){var hj=hojasSec[p.hoja-1],nfh=hj.reduce(function(a,x){return a+x.fotos.length},0);
+      body.appendChild(h("div",{class:"hoja-sep"},h("span",{class:"hoja-tag",text:"Hoja "+p.hoja}),
+        h("span",{class:"hoja-info",text:nfh+" de "+FOTOS_POR_HOJA+" fotos"+(nfh>=FOTOS_POR_HOJA?" · completa":"")})))}
+    body.appendChild(viewHallazgo(sec,hz,j))});
   body.appendChild(h("p",{class:"hint",style:"margin:4px 0 8px",text:"Cada foto nueva crea un hallazgo. Para una 2.ª foto del mismo hallazgo, usa el botón dentro del hallazgo."}));
   body.appendChild(h("div",{class:"row"},
     h("button",{class:"btn",text:"+ Tomar foto",onclick:function(){pickFotos(sec,true)}}),
@@ -473,7 +482,7 @@ function viewHallazgo(sec,hz,j){
     if(ocup>=FOTOS_POR_HOJA&&hs[i].length>1)aviso=h("p",{class:"hint",style:"margin-top:6px",text:"Si agregas una 2.ª foto, este hallazgo ocupará la hoja completa y el otro pasará a la siguiente."})}
   return h("div",{class:"ficha"},
     h("div",{class:"hz-head",style:"margin-bottom:8px"},
-      h("div",{class:"num",style:"font-size:1.2rem"},h("span",{class:"badge",style:"width:28px;height:28px;font-size:1rem",text:String(pos.num)}),"Hoja "+pos.hoja),
+      h("div",{class:"num",style:"font-size:1.2rem"},h("span",{class:"badge",style:"width:28px;height:28px;font-size:1rem",text:String(pos.num)}),"Hallazgo "+pos.num),
       h("div",{class:"row"},
         j>0?h("button",{class:"btn ghost",style:"padding:5px 10px",text:"↑","aria-label":"Mover arriba",onclick:function(){sec.hallazgos.splice(j-1,0,sec.hallazgos.splice(j,1)[0]);save();render()}}):null,
         h("button",{class:"btn ghost danger",style:"padding:5px 10px",text:"Eliminar",onclick:function(){if(confirm("¿Eliminar este hallazgo y sus fotos?")){hz.fotos.forEach(function(f){kvDel("ph:"+f.id)});sec.hallazgos.splice(j,1);save();render()}}}))),
