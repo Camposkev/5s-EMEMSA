@@ -151,7 +151,7 @@ details.col summary{cursor:pointer; color:var(--muted); font-size:.88rem}
 .prog{height:10px; border-radius:5px; background:var(--line); overflow:hidden; margin:6px 0 2px}
 .prog i{display:block; height:100%; background:var(--done); transition:width .3s}
 .ro{display:grid; grid-template-columns:auto 1fr; gap:4px 12px; font-size:.95rem; margin-bottom:12px}
-.ro dt{color:var(--muted)} .ro dd{margin:0; font-weight:500}
+.ro dt{color:var(--muted)} .ro dd{margin:0; font-weight:500; min-width:0; overflow-wrap:anywhere}
 .antes{background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:10px 12px; font-size:.92rem; margin-bottom:10px}
 .antes p{margin:2px 0} .antes b{font:600 .9rem "Barlow Condensed",sans-serif; color:var(--muted); margin-right:4px}
 .antes-strip{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px}
@@ -353,9 +353,9 @@ async function composeFoto(f,n,maxSide){var img=await loadImg(photoSrc[f.id]),s=
 async function refreshThumb(f){try{thumbs[f.id]=(await composeFoto(f,0,280)).toDataURL("image/jpeg",.8)}catch(e){}}
 var pendingHz=null;
 function pickFoto(x,cam){pendingHz=x;var el=document.getElementById(cam?"fileCam":"fileGal");el.value="";el.click()}
-async function onFiles(e){var files=[].slice.call(e.target.files||[]);if(!files.length||!pendingHz)return;var x=pendingHz,last=null;
-  for(var i=0;i<files.length&&x.fotos.length<2;i++){try{last=await fileToFoto(files[i]);await refreshThumb(last);x.fotos.push(last)}catch(err){toast("No se pudo leer una de las fotos.")}}
-  if(files.length>2||x.fotos.length>=2&&files.length>1)toast("Cada hallazgo admite hasta 2 fotos.");
+async function onFiles(e){var files=[].slice.call(e.target.files||[]);if(!files.length||!pendingHz)return;var x=pendingHz,last=null,usadas=0;
+  for(var i=0;i<files.length&&x.fotos.length<2;i++){usadas++;try{last=await fileToFoto(files[i]);await refreshThumb(last);x.fotos.push(last)}catch(err){toast("No se pudo leer una de las fotos.")}}
+  if(usadas<files.length)toast("Cada hallazgo admite hasta 2 fotos; se agregaron solo las primeras.");
   save();render();if(files.length===1&&last)openEditor(last)}
 document.getElementById("fileCam").addEventListener("change",onFiles);
 document.getElementById("fileGal").addEventListener("change",onFiles);
