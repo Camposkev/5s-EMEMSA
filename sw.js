@@ -1,7 +1,7 @@
 // Guarda las apps para que funcionen sin señal en planta.
 // Al publicar cambios, sube el número de versión para que los celulares tomen la nueva.
-const VERSION = 'ememsa-5s-v19';
-const ARCHIVOS = ['./', './index.html', './inspeccion.html', './levantamiento.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png', './logo.png'];
+const VERSION = 'ememsa-5s-v22';
+const ARCHIVOS = ['./', './index.html', './inspeccion.html', './levantamiento.html', './datos.json', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png', './logo.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(VERSION).then(c => c.addAll(ARCHIVOS)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== VERSION).map(k => caches.delete(k)))).then(() => self.clients.claim())); });
 self.addEventListener('fetch', e => {

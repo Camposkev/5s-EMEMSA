@@ -247,13 +247,36 @@ var RPR='<w:rPr><w:rFonts w:ascii="Arial Narrow" w:hAnsi="Arial Narrow"/></w:rPr
 function pLista(n,t,jc){return '<w:p><w:pPr><w:spacing w:before="20" w:after="40" w:line="276" w:lineRule="auto"/><w:ind w:left="284" w:hanging="284"/><w:jc w:val="'+(jc||'both')+'"/>'+RPR+'</w:pPr><w:r>'+RPR+'<w:t>'+n+'.</w:t></w:r><w:r>'+RPR+'<w:tab/><w:t xml:space="preserve">'+esc(t)+'</w:t></w:r></w:p>'}
 function setCell(cell,inner){var i=cell.indexOf('</w:tcPr>');var head=i>=0?cell.slice(0,i+9):cell.match(/^<w:tc[^>]*>/)[0];return head+inner+'</w:tc>'}
 function replaceCell(row,idx,fn){var cs=cellsOf(row);if(cs.length<=idx)return row;var pos=0,c=cs[idx];for(var k=0;k<idx;k++)pos=row.indexOf(cs[k],pos)+cs[k].length;var at=row.indexOf(c,pos);return row.slice(0,at)+fn(c)+row.slice(at+c.length)}
-function imgRun(rid,id,cx,cy){return '<w:r><w:drawing><wp:inline distT="45720" distB="45720" distL="57150" distR="57150"><wp:extent cx="'+cx+'" cy="'+cy+'"/><wp:docPr id="'+id+'" name="Despues '+id+'"/><wp:cNvGraphicFramePr><a:graphicFrameLocks xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" noChangeAspect="1"/></wp:cNvGraphicFramePr><a:graphic xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:nvPicPr><pic:cNvPr id="'+id+'" name="despues'+id+'.jpg"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="'+rid+'"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="'+cx+'" cy="'+cy+'"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r>'}
+function imgRun(rid,id,cx,cy){return '<w:r><w:drawing><wp:inline distT="0" distB="0" distL="0" distR="0"><wp:extent cx="'+cx+'" cy="'+cy+'"/><wp:docPr id="'+id+'" name="Despues '+id+'"/><wp:cNvGraphicFramePr><a:graphicFrameLocks xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" noChangeAspect="1"/></wp:cNvGraphicFramePr><a:graphic xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:nvPicPr><pic:cNvPr id="'+id+'" name="despues'+id+'.jpg"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="'+rid+'"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="'+cx+'" cy="'+cy+'"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r>'}
+
+/* Marcas y número del hallazgo como formas de Word SOBREPUESTAS a la foto (no incrustadas en la imagen):
+   la foto queda limpia y se puede copiar sola; las formas se pueden mover o borrar en Word. */
+var NS_A='xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"';
+function capa(id,nombre,x,y,cx,cy,cuerpo){
+  return '<w:r><w:drawing><wp:anchor distT="0" distB="0" distL="0" distR="0" simplePos="0" relativeHeight="'+(251700000+id)+'" behindDoc="0" locked="0" layoutInCell="1" allowOverlap="1">'+
+  '<wp:simplePos x="0" y="0"/><wp:positionH relativeFrom="character"><wp:posOffset>'+Math.round(x)+'</wp:posOffset></wp:positionH>'+
+  '<wp:positionV relativeFrom="line"><wp:posOffset>'+Math.round(y)+'</wp:posOffset></wp:positionV>'+
+  '<wp:extent cx="'+Math.max(1,Math.round(cx))+'" cy="'+Math.max(1,Math.round(cy))+'"/><wp:effectExtent l="0" t="0" r="0" b="0"/><wp:wrapNone/>'+
+  '<wp:docPr id="'+id+'" name="'+nombre+' '+id+'"/><wp:cNvGraphicFramePr/>'+
+  '<a:graphic '+NS_A+'><a:graphicData uri="http://schemas.microsoft.com/office/word/2010/wordprocessingShape">'+cuerpo+'</a:graphicData></a:graphic></wp:anchor></w:drawing></w:r>'}
+function capasFoto(f,cx,cy,sig){ // sig(): siguiente id único
+  var EMU=914400,out='',lw=Math.max(25400,Math.round(Math.max(cx,cy)*0.009)),R='E00000';
+  (f.shapes||[]).forEach(function(m){var x1=m.x1*cx,y1=m.y1*cy,x2=m.x2*cx,y2=m.y2*cy,x=Math.min(x1,x2),y=Math.min(y1,y2),w=Math.abs(x2-x1),h=Math.abs(y2-y1);
+    if(m.t==='c'){out+=capa(sig(),'Círculo',x,y,w,h,'<wps:wsp><wps:cNvSpPr/><wps:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="'+Math.max(1,Math.round(w))+'" cy="'+Math.max(1,Math.round(h))+'"/></a:xfrm><a:prstGeom prst="ellipse"><a:avLst/></a:prstGeom><a:noFill/><a:ln w="'+lw+'"><a:solidFill><a:srgbClr val="'+R+'"/></a:solidFill></a:ln></wps:spPr><wps:bodyPr/></wps:wsp>')}
+    else{var W=Math.max(1,Math.round(w)),H=Math.max(1,Math.round(h)),sx=Math.round(x1-x),sy=Math.round(y1-y),ex=Math.round(x2-x),ey=Math.round(y2-y);
+      out+=capa(sig(),'Flecha',x,y,W,H,'<wps:wsp><wps:cNvSpPr/><wps:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="'+W+'" cy="'+H+'"/></a:xfrm><a:custGeom><a:avLst/><a:gdLst/><a:ahLst/><a:cxnLst/><a:rect l="0" t="0" r="r" b="b"/><a:pathLst><a:path w="'+W+'" h="'+H+'" fill="none"><a:moveTo><a:pt x="'+sx+'" y="'+sy+'"/></a:moveTo><a:lnTo><a:pt x="'+ex+'" y="'+ey+'"/></a:lnTo></a:path></a:pathLst></a:custGeom><a:noFill/><a:ln w="'+lw+'" cap="rnd"><a:solidFill><a:srgbClr val="'+R+'"/></a:solidFill><a:tailEnd type="triangle" w="med" len="med"/></a:ln></wps:spPr><wps:bodyPr/></wps:wsp>')}});
+  if(f.num){var b=Math.min(0.3*EMU,0.3*Math.min(cx,cy)),mg=b*0.25,pt=Math.max(6,Math.round(b/EMU*72*0.62*2)); // tamaño en medios puntos
+    out+=capa(sig(),'Número',mg,mg,b,b,'<wps:wsp><wps:cNvSpPr txBox="1"/><wps:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="'+Math.round(b)+'" cy="'+Math.round(b)+'"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom><a:solidFill><a:srgbClr val="808080"/></a:solidFill><a:ln w="12700"><a:solidFill><a:srgbClr val="FFFFFF"/></a:solidFill></a:ln></wps:spPr>'+
+      '<wps:txbx><w:txbxContent><w:p><w:pPr><w:spacing w:before="0" w:after="0" w:line="240" w:lineRule="auto"/><w:jc w:val="center"/></w:pPr><w:r><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/><w:b/><w:color w:val="FFFFFF"/><w:sz w:val="'+pt+'"/><w:szCs w:val="'+pt+'"/></w:rPr><w:t>'+f.num+'</w:t></w:r></w:p></w:txbxContent></wps:txbx>'+
+      '<wps:bodyPr rot="0" vert="horz" wrap="none" lIns="0" tIns="0" rIns="0" bIns="0" anchor="ctr" anchorCtr="0"><a:noAutofit/></wps:bodyPr></wps:wsp>')}
+  return out}
 /* datos: {fecha, hojas:[{hallazgos:[{mejora, descripcion, observacion, fotos:[{bytes,w,h}]}]}]} */
 async function llenar(JSZip,bytes,datos){
   var zip=await JSZip.loadAsync(bytes),doc=await zip.file('word/document.xml').async('string');
   var rels=await zip.file('word/_rels/document.xml.rels').async('string');
   var ct=await zip.file('[Content_Types].xml').async('string');
   if(!/Extension="jpg"/i.test(ct)){ct=ct.replace('<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">','<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="jpg" ContentType="image/jpeg"/>');zip.file('[Content_Types].xml',ct)}
+  if(doc.indexOf('xmlns:wps=')<0)doc=doc.replace('<w:document ','<w:document xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" ');
   var B=bloquesDe(doc),EMU=914400,n=0,id=90000,partes=[],ultimo=0;
   B.forEach(function(b,bi){var hd=datos.hojas[bi];if(!hd){return}
     var rows=b.rows.map(function(r){return r.s});
@@ -262,7 +285,7 @@ async function llenar(JSZip,bytes,datos){
     if(fotos.length){var maxW=(fotos.length>1?2.4:4.8)*EMU,maxH=2.25*EMU,runs=[];
       fotos.forEach(function(f){n++;id++;var rid='rIdDesp'+n,name='despues'+n+'.jpg';zip.file('word/media/'+name,f.bytes);
         rels=rels.replace('</Relationships>','<Relationship Id="'+rid+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/'+name+'"/></Relationships>');
-        var s=Math.min(maxW/f.w,maxH/f.h);runs.push(imgRun(rid,id,Math.round(f.w*s),Math.round(f.h*s)))});
+        var s=Math.min(maxW/f.w,maxH/f.h),cx=Math.round(f.w*s),cy=Math.round(f.h*s),fid=id;runs.push(capasFoto(f,cx,cy,function(){return ++id})+imgRun(rid,fid,cx,cy))});
       rows[b.idx.fotos]=replaceCell(rows[b.idx.fotos],1,function(c){return setCell(c,'<w:p><w:pPr><w:jc w:val="center"/></w:pPr>'+runs.join('<w:r><w:t xml:space="preserve"> </w:t></w:r>')+'</w:p>')})}
     function lista(campo,jc){var ps=hd.hallazgos.map(function(h,k){return h[campo]?pLista(k+1,h[campo],jc):''}).join('');return ps||'<w:p/>'}
     if(b.idx.s!=null)rows[b.idx.s]=replaceCell(rows[b.idx.s],1,function(c){return setCell(c,lista('mejora','left'))});
@@ -347,9 +370,9 @@ function drawShapes(ctx,shapes,W,H){var lw=Math.max(3,Math.round(Math.max(W,H)*.
 function drawBadge(ctx,n,W,H){var esc=Math.min(2.3/W,2.25/H),b=Math.round(Math.min(.3/esc,Math.min(W,H)*.3)),m=Math.round(b*.25);
   ctx.fillStyle="#808080";ctx.fillRect(m,m,b,b);ctx.strokeStyle="#fff";ctx.lineWidth=Math.max(1,b*.04);ctx.strokeRect(m,m,b,b);
   ctx.fillStyle="#fff";ctx.font="700 "+Math.round(b*.62)+"px Arial, sans-serif";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText(String(n),m+b/2,m+b/2+1)}
-async function composeFoto(f,n,maxSide){var img=await loadImg(photoSrc[f.id]),s=maxSide?Math.min(1,maxSide/Math.max(f.w,f.h)):1;
+async function composeFoto(f,n,maxSide,limpia){var img=await loadImg(photoSrc[f.id]),s=maxSide?Math.min(1,maxSide/Math.max(f.w,f.h)):1;
   var c=document.createElement("canvas");c.width=Math.round(f.w*s);c.height=Math.round(f.h*s);var ctx=c.getContext("2d");
-  ctx.drawImage(img,0,0,c.width,c.height);drawShapes(ctx,f.shapes||[],c.width,c.height);if(n)drawBadge(ctx,n,c.width,c.height);return c}
+  ctx.drawImage(img,0,0,c.width,c.height);if(!limpia){drawShapes(ctx,f.shapes||[],c.width,c.height);if(n)drawBadge(ctx,n,c.width,c.height)}return c}
 async function refreshThumb(f){try{thumbs[f.id]=(await composeFoto(f,0,280)).toDataURL("image/jpeg",.8)}catch(e){}}
 var pendingHz=null;
 function pickFoto(x,cam){pendingHz=x;var el=document.getElementById(cam?"fileCam":"fileGal");el.value="";el.click()}
@@ -468,7 +491,7 @@ async function generar(){
     var datos={fecha:fmtFecha(L.fecha),hojas:[]};
     for(var i=0;i<L.hojas.length;i++){var hs=[];
       for(var k=0;k<L.hojas[i].hallazgos.length;k++){var x=L.hojas[i].hallazgos[k],fs=[];
-        for(var q=0;q<x.fotos.length;q++){var c=await composeFoto(x.fotos[q],q===0?k+1:0,1100);var blob=await new Promise(function(res){c.toBlob(res,"image/jpeg",.85)});fs.push({bytes:new Uint8Array(await blob.arrayBuffer()),w:c.width,h:c.height})}
+        for(var q=0;q<x.fotos.length;q++){var c=await composeFoto(x.fotos[q],0,1100,true);var blob=await new Promise(function(res){c.toBlob(res,"image/jpeg",.85)});fs.push({bytes:new Uint8Array(await blob.arrayBuffer()),w:c.width,h:c.height,shapes:x.fotos[q].shapes||[],num:q===0?k+1:0})}
         var hay=fs.length||x.d.trim();
         hs.push({mejora:hay?x.ss.join(" / "):"",descripcion:frase(x.d),observacion:frase(x.obs),fotos:fs})}
       datos.hojas.push({hallazgos:hs})}
