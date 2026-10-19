@@ -246,7 +246,7 @@ async function kvDel(k){delete mem[k];try{var d=await getDb();if(d)d.transaction
 function uid(){return Math.random().toString(36).slice(2,10)}
 function today(){var d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
 function fmtFecha(iso){if(!iso)return "";var p=iso.split("-");return p[2]+"/"+p[1]+"/"+p[0]}
-var AUDITORES=["ANTONY NINAMANCCO", "BRYAN BAZÁN", "DAVID HUAMAN", "D’ESTEFANO VASQUEZ", "EDU APARICIO", "JONATHAN SANCHEZ", "JOSE QUISPE", "KEVIN CAMPOS", "LEANDRO YANARICO", "LUIS ANGLAS", "MAITTE GUILLÉN"];
+var AUDITORES=["ANTONY NINAMANCCO", "BRYAN BAZÁN", "DAVID HUAMAN", "D’ESTEFANO VASQUEZ", "EDU APARICIO", "JONATHAN SANCHEZ", "CLAUDIA TRUJILLO", "JOSE QUISPE", "KEVIN CAMPOS", "LEANDRO YANARICO", "LUIS ANGLAS", "MAITTE GUILLÉN"];
 var prefs={inspector:"",ultimo:37};
 function seedAreas(){return SEEDS.areas.map(function(a){return {id:uid(),a:a.a,j:a.j,auto:!!a.auto,subs:a.subs.map(function(s){return {n:s.n,c:s.c}})}})}
 var areas=seedAreas();
