@@ -236,6 +236,10 @@ section.card>h2,.card-head h2{font-size:1.2rem;font-weight:700}
 .hoja-fin{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;margin:-2px 0 14px;padding:10px 14px;border-radius:10px;border:1.5px solid color-mix(in srgb,var(--ok) 45%,var(--line));background:color-mix(in srgb,var(--ok) 9%,var(--panel));color:var(--ok);font:inherit;font-weight:600;cursor:pointer;min-height:46px}
 .hoja-fin b{color:var(--ink);font-weight:700;border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:5px 12px}
 .hoja-fin:hover b{border-color:var(--ink)}
+.subir{position:fixed;right:16px;bottom:96px;z-index:7;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:color-mix(in srgb,var(--panel) 92%,transparent);color:var(--ink);box-shadow:0 4px 14px rgba(0,0,0,.18);display:grid;place-items:center;cursor:pointer;opacity:0;transform:translateY(10px);pointer-events:none;transition:opacity .2s,transform .2s}
+.subir.ver{opacity:.92;transform:none;pointer-events:auto}
+.subir:hover{opacity:1;border-color:var(--ink)}
+@media (min-width:1100px){.subir{right:calc((100vw - 820px)/2 - 64px)}}
 </style>
 </head>
 <body>
@@ -940,5 +944,11 @@ async function cargarDatos(){
 })();
 </script>
 <script>if("serviceWorker" in navigator&&location.protocol!=="file:"){addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}</script>
+<script>(function(){var b=document.createElement("button");b.type="button";b.className="subir";b.title="Volver arriba";b.setAttribute("aria-label","Volver arriba");
+b.innerHTML='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
+var red=matchMedia("(prefers-reduced-motion: reduce)").matches;
+b.addEventListener("click",function(){scrollTo({top:0,behavior:red?"auto":"smooth"})});document.body.appendChild(b);
+function pos(){var bar=document.getElementById("bar"),h=bar&&getComputedStyle(bar).display!=="none"?Math.round(bar.getBoundingClientRect().height):0;b.style.bottom=(h+14)+"px";b.classList.toggle("ver",scrollY>500)}
+addEventListener("scroll",pos,{passive:true});addEventListener("resize",pos);setInterval(pos,1500);pos()})();</script>
 </body>
 </html>
