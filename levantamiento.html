@@ -12,7 +12,7 @@
 <title>Subsanación de observaciones 5S</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script>try{var t=localStorage.getItem("tema");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
 <script>/*!
 
@@ -41,14 +41,14 @@ https://github.com/nodeca/pako/blob/main/LICENSE
 :root[data-theme="dark"]{ --bg:#141B1E; --panel:#1D262A; --ink:#E7ECEC; --muted:#9AA8AC; --line:#33424A; --field:#172024; --ok:#5BB38A; --red:#FF5C6F; --tapeInk:#141B1E; color-scheme:dark;}
 *,*::before,*::after{box-sizing:inherit}
 html{height:100%; scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0; background:var(--bg); color:var(--ink); font:16px/1.45 "Barlow",system-ui,-apple-system,"Segoe UI",sans-serif; min-height:100%}
-h1,h2,h3,.cond{font-family:"Barlow Condensed","Arial Narrow",system-ui,sans-serif}
+body{margin:0; background:var(--bg); color:var(--ink); font:16px/1.45 "Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif; min-height:100%}
+h1,h2,h3,.cond{font-family:"Plus Jakarta Sans",system-ui,sans-serif}
 .wrap{max-width:760px; margin:0 auto; padding:16px 16px 120px}
 header.top{display:flex; align-items:flex-end; justify-content:space-between; gap:12px; flex-wrap:wrap; margin:6px 0 14px}
 header.top h1{font-size:2rem; line-height:1; margin:0; font-weight:700; letter-spacing:.01em}
 header.top p{margin:4px 0 0; color:var(--muted); font-size:.95rem}
 nav.tabs{display:flex; gap:4px; background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:4px}
-nav.tabs button{border:0; background:none; color:var(--muted); font:600 1rem "Barlow Condensed",sans-serif; padding:6px 14px; border-radius:7px; cursor:pointer}
+nav.tabs button{border:0; background:none; color:var(--muted); font:600 1rem "Plus Jakarta Sans",sans-serif; padding:6px 14px; border-radius:7px; cursor:pointer}
 nav.tabs button[aria-selected="true"]{background:var(--ink); color:var(--bg)}
 section.card{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:16px; margin-bottom:14px}
 section.card>h2{font-size:1.35rem; margin:0 0 12px; font-weight:600}
@@ -59,7 +59,7 @@ label.f{display:flex; flex-direction:column; gap:4px; font-size:.88rem; color:va
 input,select,textarea{font:inherit; color:var(--ink); background:var(--field); border:1px solid var(--line); border-radius:8px; padding:9px 10px; width:100%; min-width:0}
 textarea{resize:vertical; min-height:62px}
 input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--tape); outline-offset:1px}
-.btn{font:600 1rem "Barlow Condensed",sans-serif; letter-spacing:.02em; border:1px solid var(--line); background:var(--panel); color:var(--ink); padding:9px 14px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:6px}
+.btn{font:600 1rem "Plus Jakarta Sans",sans-serif; letter-spacing:.02em; border:1px solid var(--line); background:var(--panel); color:var(--ink); padding:9px 14px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:6px}
 .btn.primary{background:var(--ink); color:var(--bg); border-color:var(--ink)}
 .btn.ghost{background:none}
 .btn.danger{color:var(--red)}
@@ -67,17 +67,17 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 .row{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
 .hz{border-left:6px solid var(--tape)}
 .hz-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:10px}
-.num{font:700 1.5rem "Barlow Condensed",sans-serif; display:flex; align-items:center; gap:10px}
+.num{font:700 1.5rem "Plus Jakarta Sans",sans-serif; display:flex; align-items:center; gap:10px}
 .num span.badge{background:#808080; color:#fff; width:34px; height:34px; display:grid; place-items:center; border-radius:3px; font-size:1.2rem}
 .chips{display:flex; flex-wrap:wrap; gap:6px; margin:4px 0 12px}
-.chip{border:1px solid var(--line); background:var(--field); color:var(--ink); border-radius:999px; padding:6px 12px; font:500 .95rem "Barlow",sans-serif; cursor:pointer}
+.chip{border:1px solid var(--line); background:var(--field); color:var(--ink); border-radius:999px; padding:6px 12px; font:500 .95rem "Plus Jakarta Sans",sans-serif; cursor:pointer}
 .chip[aria-pressed="true"]{background:var(--tape); color:var(--tapeInk); border-color:var(--tape); font-weight:600}
 .photos{display:flex; gap:8px; flex-wrap:wrap; margin:6px 0 12px}
 .ph{position:relative; width:104px; height:104px; border-radius:8px; overflow:hidden; border:1px solid var(--line); background:var(--field); cursor:pointer; padding:0}
 .ph img{width:100%; height:100%; object-fit:cover; display:block}
 .ph .x{position:absolute; top:4px; right:4px; width:26px; height:26px; border-radius:50%; border:0; background:rgba(0,0,0,.65); color:#fff; font-size:16px; line-height:26px; cursor:pointer}
 .ph .mk{position:absolute; left:0; right:0; bottom:0; background:rgba(0,0,0,.55); color:#fff; font-size:.75rem; text-align:center; padding:2px 0}
-.addph{width:104px; height:104px; border:1.5px dashed var(--line); border-radius:8px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; color:var(--muted); background:none; cursor:pointer; font:500 .85rem "Barlow",sans-serif}
+.addph{width:104px; height:104px; border:1.5px dashed var(--line); border-radius:8px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; color:var(--muted); background:none; cursor:pointer; font:500 .85rem "Plus Jakarta Sans",sans-serif}
 .addph b{font-size:1.6rem; line-height:1; font-weight:400}
 .hint{color:var(--muted); font-size:.88rem; margin:0}
 .empty{text-align:center; padding:28px 12px; color:var(--muted)}
@@ -103,7 +103,7 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 /* v2 */
 .sec{padding:0; overflow:hidden}
 .sec-head{padding:12px 16px; display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap}
-.sec-head .t{font:700 1.25rem "Barlow Condensed",sans-serif; letter-spacing:.01em}
+.sec-head .t{font:700 1.25rem "Plus Jakarta Sans",sans-serif; letter-spacing:.01em}
 .sec-body{padding:14px 16px 16px}
 .sw{display:flex; gap:6px; flex-wrap:wrap; margin:8px 0 2px}
 .sw button{width:28px; height:28px; border-radius:6px; border:1px solid rgba(0,0,0,.25); cursor:pointer; padding:0}
@@ -112,15 +112,15 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 .ficha-top{display:flex; gap:12px; align-items:flex-start}
 .ficha-top .ph{width:132px; height:132px; flex:none}
 .ficha-meta{flex:1; min-width:0}
-.pg{font:600 .95rem "Barlow Condensed",sans-serif; color:var(--muted); margin:0 0 6px}
+.pg{font:600 .95rem "Plus Jakarta Sans",sans-serif; color:var(--muted); margin:0 0 6px}
 .hzbox{border-top:1px dashed var(--line); margin-top:12px; padding-top:10px}
-.hzbox h4{margin:0 0 6px; font:600 1.05rem "Barlow Condensed",sans-serif; display:flex; justify-content:space-between; align-items:center}
+.hzbox h4{margin:0 0 6px; font:600 1.05rem "Plus Jakarta Sans",sans-serif; display:flex; justify-content:space-between; align-items:center}
 .sug{list-style:none; margin:4px 0 0; padding:0; border:1px solid var(--line); border-radius:8px; background:var(--panel); max-height:260px; overflow:auto}
 .sug li button{display:block; width:100%; text-align:left; border:0; border-bottom:1px solid var(--line); background:none; color:var(--ink); padding:8px 10px; font:inherit; font-size:.92rem; cursor:pointer}
 .sug li button small{display:block; color:var(--muted); font-size:.8rem}
 .sug li:last-child button{border-bottom:0}
 .prev{margin-top:12px; background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:10px 12px; font-size:.9rem}
-.prev b{font:600 .95rem "Barlow Condensed",sans-serif; color:var(--muted); display:block; margin-bottom:4px}
+.prev b{font:600 .95rem "Plus Jakarta Sans",sans-serif; color:var(--muted); display:block; margin-bottom:4px}
 .prev p{margin:2px 0}
 .addsec{display:flex; gap:8px; flex-wrap:wrap}
 .addsec select{flex:1; min-width:200px}
@@ -129,13 +129,13 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 details.col summary{cursor:pointer; color:var(--muted); font-size:.88rem}
 .area-card{border:1px solid var(--line); border-radius:10px; padding:12px; margin-top:12px}
 #tema button[aria-pressed="true"]{background:var(--ink); color:var(--bg)}
-#tema button{font:600 .95rem "Barlow Condensed",sans-serif; border:0; background:none; color:var(--muted); padding:6px 10px; border-radius:7px; cursor:pointer}
+#tema button{font:600 .95rem "Plus Jakarta Sans",sans-serif; border:0; background:none; color:var(--muted); padding:6px 10px; border-radius:7px; cursor:pointer}
 @media (max-width:520px){header.top{flex-direction:column; align-items:stretch}}
 .cel{position:fixed; inset:0; z-index:50; background:rgba(14,20,22,.72); display:flex; align-items:center; justify-content:center; padding:20px; overflow:hidden}
 .cel-box{position:relative; background:var(--panel); color:var(--ink); border-radius:16px; padding:28px 24px 22px; max-width:420px; width:100%; text-align:center; border-top:8px solid var(--tape); animation:pop .35s ease-out}
-.cel-box h2{font:700 2.2rem "Barlow Condensed",sans-serif; margin:10px 0 4px}
+.cel-box h2{font:700 2.2rem "Plus Jakarta Sans",sans-serif; margin:10px 0 4px}
 .cel-num{font-weight:600; margin:0 0 12px}
-.cel-frase{font:500 1.1rem/1.4 "Barlow",sans-serif; margin:0 0 12px; color:var(--ink)}
+.cel-frase{font:500 1.1rem/1.4 "Plus Jakarta Sans",sans-serif; margin:0 0 12px; color:var(--ink)}
 .cel-ic svg .chk{stroke-dasharray:90; stroke-dashoffset:90; animation:draw .6s .2s ease-out forwards}
 .conf{position:absolute; inset:0; pointer-events:none}
 .conf i{position:absolute; top:-12px; width:9px; height:14px; border-radius:2px; animation:fall 2.4s ease-in forwards}
@@ -153,17 +153,60 @@ details.col summary{cursor:pointer; color:var(--muted); font-size:.88rem}
 .ro{display:grid; grid-template-columns:auto 1fr; gap:4px 12px; font-size:.95rem; margin-bottom:12px}
 .ro dt{color:var(--muted)} .ro dd{margin:0; font-weight:500; min-width:0; overflow-wrap:anywhere}
 .antes{background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:10px 12px; font-size:.92rem; margin-bottom:10px}
-.antes p{margin:2px 0} .antes b{font:600 .9rem "Barlow Condensed",sans-serif; color:var(--muted); margin-right:4px}
+.antes p{margin:2px 0} .antes b{font:600 .9rem "Plus Jakarta Sans",sans-serif; color:var(--muted); margin-right:4px}
 .antes-strip{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px}
 .antes-strip button{border:1px solid var(--line); border-radius:8px; padding:0; overflow:hidden; background:none; cursor:zoom-in; height:120px}
 .antes-strip img{height:100%; display:block}
-.ok-tag{font:600 .85rem "Barlow",sans-serif; padding:3px 10px; border-radius:999px; border:1px solid var(--line); color:var(--muted)}
+.ok-tag{font:600 .85rem "Plus Jakarta Sans",sans-serif; padding:3px 10px; border-radius:999px; border:1px solid var(--line); color:var(--muted)}
 .ok-tag.ok{background:var(--done); border-color:var(--done); color:#fff}
 .zoom{position:fixed; inset:0; background:rgba(0,0,0,.88); z-index:40; display:flex; align-items:center; justify-content:center; padding:16px; cursor:zoom-out}
 .zoom img{max-width:100%; max-height:100%}
 .drop{border:2px dashed var(--line); border-radius:12px; padding:28px 16px; text-align:center}
 .drop p{color:var(--muted); margin:8px 0 16px}
 ol.pasos{margin:8px 0 0; padding-left:20px; color:var(--muted); font-size:.95rem}
+
+/* v1.2: tarjetas ANTES | DESPUÉS */
+h1,h2,h3,.cond{letter-spacing:-.015em}
+header.top h1{font-size:1.75rem;font-weight:800}
+section.card>h2{font-size:1.2rem;font-weight:700}
+.btn{font-weight:600;letter-spacing:0;font-size:.95rem}
+.wrap{max-width:1000px}
+.bar .in{max-width:1000px}
+.hzc{border:2px solid var(--line);border-radius:14px;background:var(--panel);margin-bottom:14px;overflow:hidden;scroll-margin-top:12px;transition:border-color .2s,box-shadow .3s}
+.hzc.lista{border-color:color-mix(in srgb,var(--ok) 55%,var(--line))}
+.hzc.pulso{box-shadow:0 0 0 4px var(--tape)}
+.hzc-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line)}
+.hzc-head .num{font:700 1.05rem "Plus Jakarta Sans",sans-serif;display:flex;align-items:center;gap:10px}
+.hzc-head .badge{background:#808080;color:#fff;width:28px;height:28px;display:grid;place-items:center;border-radius:3px;font-size:.95rem}
+.ab{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+@media (max-width:760px){.ad-dl{grid-template-columns:minmax(0,1fr);gap:2px}.ad-dl dd{margin-bottom:6px}.ab{grid-template-columns:minmax(0,1fr)}.desp-col{border-left:0!important;border-top:1px solid var(--line)}}
+.ab .col{padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.antes-col{background:var(--field)}
+.desp-col{border-left:1px solid var(--line)}
+.col-t{font:800 .78rem "Plus Jakarta Sans",sans-serif;letter-spacing:.12em;color:var(--muted)}
+.col-t.ok{color:var(--ok)}
+.fotos-ab{display:flex;gap:8px}
+.fab{flex:1 1 0;min-width:0;max-width:260px;aspect-ratio:4/3;width:auto;height:auto;border-radius:10px;overflow:hidden;border:1px solid var(--line);padding:0;background:var(--panel);cursor:zoom-in;position:relative}
+.fab img{width:100%;height:100%;object-fit:cover;display:block}
+.fab.ph{cursor:pointer}
+.fab.addph{cursor:pointer}
+.ad-dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 10px;margin:0;font-size:.92rem}
+.ad-dl dt{color:var(--muted);font-weight:700}
+.ad-dl dd{margin:0;overflow-wrap:anywhere}
+.ok-tag{font-size:.8rem}
+.prog-wrap{display:flex;flex-direction:column;gap:4px;min-width:0;flex:1 1 160px}
+.prog.mini{height:7px;margin:0;max-width:260px}
+.bar .btn{white-space:nowrap}.bar .sm{display:none}
+@media (max-width:560px){.bar .lg{display:none}.bar .sm{display:inline}.bar .btn{padding:9px 11px;font-size:.88rem}.prog-wrap{display:none}.bar .in{justify-content:flex-end}}
+.cel-box{max-height:calc(100vh - 40px);overflow:auto}
+.cel-file{display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin:4px 0 10px;text-align:left}
+.cel-file .fi{flex:none;width:38px;height:38px;border-radius:8px;display:grid;place-items:center;color:#fff;font-weight:800;background:#2B579A}
+.cel-file .fn{min-width:0;display:flex;flex-direction:column}
+.cel-file .fn b{font-size:.85rem;overflow-wrap:anywhere}
+.cel-file .fn small{color:var(--muted);font-size:.78rem}
+.btn.wa{background:#1E7A4A;color:#fff;border-color:#1E7A4A}
+.ver{display:inline-flex;align-items:center;gap:6px;margin-top:10px;font-size:.75rem;font-weight:600;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:3px 10px 3px 4px;background:var(--panel)}
+.ver b{background:var(--ink);color:var(--bg);border-radius:999px;padding:1px 8px;font-weight:700}
 </style>
 </head>
 <body>
@@ -182,12 +225,14 @@ ol.pasos{margin:8px 0 0; padding-left:20px; color:var(--muted); font-size:.95rem
   <footer class="pie">
     <p id="contacto">¿Dudas o sugerencias? Comunícate con el Área de Innovación y Desarrollo.</p>
 <p><a href="index.html" style="color:inherit">← Volver al inicio</a></p>
+<p><span class="ver"><b>v1.2</b>Programa 5S · EMEMSA · Oct 2026</span></p>
   </footer>
 </div>
 <div class="bar" id="bar" style="display:none"><div class="in">
-  <span class="status" id="status"></span>
+  <div class="prog-wrap"><span class="status" id="status"></span><span class="prog mini"><i id="barProg" style="width:0"></i></span></div>
   <div class="row">
-    <button class="btn ghost" id="btnCambiar">Cambiar informe</button>
+    <button class="btn ghost" id="btnCambiar"><span class="lg">Cargar otro informe</span><span class="sm">Otro informe</span></button>
+    <button class="btn" id="btnSig"><span class="lg">Siguiente pendiente</span><span class="sm">Pendiente</span></button>
     <button class="btn primary" id="btnGen">Generar Word</button>
   </div>
 </div></div>
@@ -335,6 +380,7 @@ function hzCompleto(x){return x.fotos.length>0&&x.d.trim().length>0&&(x.obs||"")
 function faltaDe(x){var f=[];if(!x.fotos.length)f.push("foto");if(!x.d.trim())f.push("descripción de la mejora");if(!(x.obs||"").trim())f.push("observaciones");return f}
 function totales(){var t=0,c=0;L.hojas.forEach(function(hj){hj.hallazgos.forEach(function(x){t++;if(hzCompleto(x))c++})});return {t:t,c:c}}
 function status(){if(!L)return;var r=totales();document.getElementById("status").textContent=r.c+" de "+r.t+" hallazgos completos";
+  var bp=document.getElementById("barProg");if(bp)bp.style.width=(r.t?Math.round(100*r.c/r.t):0)+"%";
   var p=document.getElementById("progBar");if(p)p.style.width=(r.t?Math.round(100*r.c/r.t):0)+"%";
   var pt=document.getElementById("progTxt");if(pt)pt.textContent=r.c+" de "+r.t+" hallazgos completos"}
 
@@ -353,7 +399,7 @@ async function cargarDoc(bytes,nombre,nuevo){
 document.getElementById("fileDoc").addEventListener("change",async function(e){var f=e.target.files[0];e.target.value="";if(!f)return;
   if(!/\.docx$/i.test(f.name)){toast("Elige el archivo Word (.docx) que te enviaron.");return}
   try{var bytes=new Uint8Array(await f.arrayBuffer());
-    if(L&&L.hojas.some(function(hj){return hj.hallazgos.some(function(x){return x.fotos.length||x.d})})&&!confirm("Se reemplazará la subsanación en curso de "+L.nombre+". ¿Continuar?"))return;
+    if(L&&L.hojas.some(function(hj){return hj.hallazgos.some(function(x){return x.fotos.length||x.d})})&&!confirm("Se quitará de este dispositivo la subsanación en curso de "+L.nombre+". Asegúrate de haber generado y enviado su Word. ¿Continuar?"))return;
     if(L)L.hojas.forEach(function(hj){hj.hallazgos.forEach(function(x){x.fotos.forEach(function(p){kvDel("ph:"+p.id)})})});photoSrc={};thumbs={};
     await cargarDoc(bytes,f.name,true);render();scrollTo(0,0)}
   catch(err){console.error(err);toast(err.message&&err.message.indexOf("No se encontraron")===0?err.message:"No se pudo leer el Word. Verifica que sea el informe 5S en formato .docx.")}});
@@ -413,7 +459,7 @@ function render(){
 function viewCarga(){
   return h("section",{class:"card"},h("div",{class:"drop"},
     h("h2",{style:"margin:0;font-size:1.5rem",text:"Carga el informe que te enviaron"}),
-    h("p",{text:"Es el Word del informe 5S (ANTES) que llegó por correo. Todo se procesa en este dispositivo."}),
+    h("p",{text:"Es el Word del Reporte de inspección (ANTES) que llegó por correo o WhatsApp. Todo se procesa en este dispositivo."}),
     h("button",{class:"btn primary",style:"padding:12px 20px",text:"Elegir Word (.docx)",onclick:function(){document.getElementById("fileDoc").click()}})),
     h("ol",{class:"pasos"},h("li",{text:"Descarga el Word del correo y elígelo aquí."}),h("li",{text:"Por cada hallazgo: toma la foto del después y describe la mejora."}),
       h("li",null,conCorreo("Toca Generar Word y envíalo al siguiente correo antes de la fecha límite:"))));
@@ -427,31 +473,49 @@ function viewDatos(){var c=INFO.cab;
     h("p",{class:"hint",style:"margin-top:10px",text:"Para generar el Word, cada hallazgo debe tener foto del después, descripción de la mejora y observaciones."}),
     h("div",{style:"margin-top:14px"},h("div",{class:"prog"},h("i",{id:"progBar",style:"width:0"})),h("p",{class:"hint",id:"progTxt"})));
 }
+/* fotos del antes de cada hallazgo: 1 hallazgo → todas sus fotos; 2 hallazgos y 2 fotos → una cada uno */
+function antesDe(hj,k){var u=hj.antesURL||[];if(!u.length)return [];if(hj.hallazgos.length===1)return u;if(u.length===hj.hallazgos.length)return [u[k]];return null}
 function viewHoja(hj,lh,i){
   var fill="#"+hj.fill, ink="#"+textOn(hj.fill);
   var body=h("div",{class:"sec-body"});
-  if(hj.antesURL.length)body.appendChild(h("div",null,h("p",{class:"pg",text:"Fotos del antes"}),h("div",{class:"antes-strip"},hj.antesURL.map(function(u,k){return h("button",{type:"button","aria-label":"Ampliar foto del antes "+(k+1),onclick:function(){zoom(u)}},h("img",{src:u,alt:""}))}))));
-  hj.hallazgos.forEach(function(x,k){body.appendChild(viewHz(hj,x,lh.hallazgos[k],k))});
+  var reparte=hj.hallazgos.every(function(x,k){return antesDe(hj,k)!==null});
+  if(!reparte&&hj.antesURL.length)body.appendChild(h("div",null,h("p",{class:"pg",text:"Fotos del antes de esta hoja"}),h("div",{class:"antes-strip"},hj.antesURL.map(function(u,k){return h("button",{type:"button","aria-label":"Ampliar foto del antes "+(k+1),onclick:function(){zoom(u)}},h("img",{src:u,alt:""}))}))));
+  hj.hallazgos.forEach(function(x,k){body.appendChild(viewHz(hj,x,lh.hallazgos[k],k,reparte?antesDe(hj,k):[]))});
   return h("section",{class:"card sec"},h("div",{class:"sec-head",style:"background:"+fill+";color:"+ink},h("span",{class:"t",text:hj.titulo||"Hoja"}),h("span",{style:"font-size:.9rem",text:"Hoja "+(i+1)+" de "+INFO.hojas.length})),body);
 }
-function viewHz(hj,a,x,k){
-  var tag=h("span",{class:"ok-tag"+(hzCompleto(x)?" ok":""),text:hzCompleto(x)?"Completo":"Pendiente"});
-  function upd(){var ok=hzCompleto(x);tag.className="ok-tag"+(ok?" ok":"");tag.textContent=ok?"Completo":"Pendiente";save()}
+function viewHz(hj,a,x,k,fotosAntes){
+  function txt(){var f=faltaDe(x);return f.length?"Falta "+f.join(", "):"Completo"}
+  var tag=h("span",{class:"ok-tag"+(hzCompleto(x)?" ok":""),text:txt()});
+  var card;
+  function upd(){var ok=hzCompleto(x);tag.className="ok-tag"+(ok?" ok":"");tag.textContent=txt();card.classList.toggle("lista",ok);save()}
   var desc=h("textarea",{rows:"3",value:x.d,placeholder:"Se realizó…",oninput:function(){x.d=this.value;upd()}});
   var obs=h("textarea",{rows:"2",value:x.obs,placeholder:"Escribe una observación",oninput:function(){x.obs=this.value;upd()}});
-  return h("div",{class:"ficha","data-hz":hj.i+"-"+k},
-    h("div",{class:"hz-head",style:"margin-bottom:8px"},h("div",{class:"num",style:"font-size:1.2rem"},h("span",{class:"badge",style:"width:28px;height:28px;font-size:1rem",text:String(k+1)}),"Hallazgo"),tag),
-    h("div",{class:"antes"},h("p",null,h("b",{text:"S:"}),a.s||"—"),h("p",null,h("b",{text:"Hallazgo:"}),a.d||"—"),h("p",null,h("b",{text:"Recomendación:"}),a.r||"—")),
-    h("p",{class:"hint",text:"Foto del después (máx. 2)"}),
-    h("div",{class:"photos"},x.fotos.map(function(f,q){return h("div",{class:"ph",role:"button",tabindex:"0","aria-label":"Marcar foto",onclick:function(){openEditor(f)}},
+  var antes=h("div",{class:"col antes-col"},h("span",{class:"col-t",text:"ANTES"}),
+    fotosAntes.length?h("div",{class:"fotos-ab"},fotosAntes.map(function(u,q){return h("button",{type:"button",class:"fab","aria-label":"Ampliar foto del antes",onclick:function(){zoom(u)}},h("img",{src:u,alt:""}))})):null,
+    h("dl",{class:"ad-dl"},h("dt",{text:"S"}),h("dd",{text:a.s||"—"}),h("dt",{text:"Hallazgo"}),h("dd",{text:a.d||"—"}),h("dt",{text:"Recomendación"}),h("dd",{text:a.r||"—"})));
+  var desp=h("div",{class:"col desp-col"},h("span",{class:"col-t ok",text:"DESPUÉS"}),
+    h("div",{class:"fotos-ab"},x.fotos.map(function(f,q){return h("div",{class:"fab ph",role:"button",tabindex:"0","aria-label":"Marcar foto",onclick:function(){openEditor(f)}},
         h("img",{src:thumbs[f.id]||photoSrc[f.id],alt:""}),h("span",{class:"mk",text:f.shapes.length?f.shapes.length+" marca"+(f.shapes.length>1?"s":""):"Toca para marcar"}),
         h("button",{class:"x","aria-label":"Quitar foto",text:"×",onclick:function(ev){ev.stopPropagation();kvDel("ph:"+f.id);x.fotos.splice(q,1);save();render()}}))}),
-      x.fotos.length<2?h("button",{class:"addph",onclick:function(){pickFoto(x,true)}},h("b",{text:"+"}),"Tomar foto"):null,
-      x.fotos.length<2?h("button",{class:"addph",onclick:function(){pickFoto(x,false)}},h("b",{text:"⧉"}),"Galería"):null),
-    h("p",{class:"hint",text:"Mejora: ¿qué S se corrigieron?"}),
+      x.fotos.length<2?h("button",{class:"fab addph",onclick:function(){pickFoto(x,true)}},h("b",{text:"+"}),"Tomar foto"):null,
+      x.fotos.length<2?h("button",{class:"fab addph",onclick:function(){pickFoto(x,false)}},h("b",{text:"⧉"}),"Galería"):null),
+    h("p",{class:"hint",text:"¿Qué S se corrigieron?"}),
     h("div",{class:"chips"},ESES.map(function(s){var on=x.ss.indexOf(s)>=0;return h("button",{class:"chip","aria-pressed":on?"true":"false",text:s,onclick:function(){if(on)x.ss.splice(x.ss.indexOf(s),1);else x.ss.push(s);x.ss=ESES.filter(function(v){return x.ss.indexOf(v)>=0});save();render()}})})),
-    h("div",{class:"grid"},field("Descripción de la mejora",desc,"full"),field("Observaciones",obs,"full")));
+    field("Descripción de la mejora",desc,"full"),field("Observaciones",obs,"full"));
+  card=h("article",{class:"hzc"+(hzCompleto(x)?" lista":""),"data-hz":hj.i+"-"+k},
+    h("div",{class:"hzc-head"},h("div",{class:"num"},h("span",{class:"badge",text:String(k+1)}),"Hallazgo "+(k+1)),tag),
+    h("div",{class:"ab"},antes,desp));
+  return card;
 }
+function irPendiente(){var pi=-1,pk=-1;L.hojas.some(function(hj,i){return hj.hallazgos.some(function(x,k){if(!hzCompleto(x)){pi=i;pk=k;return true}})});
+  if(pi<0){toast("¡Todos los hallazgos están completos! Ya puedes generar el Word.");return}
+  var el=document.querySelector('[data-hz="'+pi+"-"+pk+'"]');if(el){el.scrollIntoView({behavior:"smooth",block:"start"});el.classList.add("pulso");setTimeout(function(){el.classList.remove("pulso")},1400)}}
+async function compartir(archivo,texto){
+  try{var f=new File([archivo.blob],archivo.name,{type:archivo.blob.type});
+    if(navigator.canShare&&navigator.share&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:"Programa 5S",text:texto});return}}catch(e){if(e&&e.name==="AbortError")return}
+  window.open("https://wa.me/?text="+encodeURIComponent(texto+"\n(Adjunto el Word descargado.)"),"_blank","noopener");
+  toast("Se abrió WhatsApp con el mensaje. Adjunta el Word que se descargó (carpeta Descargas).")}
+function otroInforme(){document.getElementById("fileDoc").click()}
 
 /* ---------- mensaje final ---------- */
 var FRASES=[
@@ -460,7 +524,7 @@ var FRASES=[
  "Un lugar para cada cosa y cada cosa en su lugar. ¡Gracias por tu compromiso!",
  "La mejora continua se construye con acciones como esta.",
  "Tu área da el ejemplo. ¡Sigamos así!"];
-function celebrar(c,t){c=t;
+function celebrar(c,t,archivo){c=t;
   var frase=FRASES[Math.floor(Math.random()*FRASES.length)], completo=c===t;
   var colores=["#F2B705","#2E7D5B","#0070C0","#EE0000","#7030A0","#00B050"];
   var conf=h("div",{class:"conf","aria-hidden":"true"});
@@ -472,8 +536,13 @@ function celebrar(c,t){c=t;
       h("h2",{id:"celT",text:completo?"¡Buen trabajo!":"¡Buen avance!"}),
       h("p",{class:"cel-num",text:completo?(t===1?"Subsanaste el hallazgo del informe.":"Subsanaste los "+t+" hallazgos del informe."):"Subsanaste "+c+" de "+t+" hallazgos. Completa los pendientes antes de la fecha límite."}),
       h("p",{class:"cel-frase",text:"“"+frase+"”"}),
-      h("p",{class:"hint"},conCorreo("El Word quedó guardado en tu dispositivo. Envíalo al siguiente correo:")),
-      h("button",{class:"btn primary",style:"margin-top:14px",text:"Cerrar",onclick:function(){ov.remove()}})));
+      archivo?h("div",{class:"cel-file"},h("span",{class:"fi w",text:"W"}),h("span",{class:"fn"},h("b",{text:archivo.name}),h("small",{text:"Word subsanado · descargado"}))):null,
+      h("p",{class:"hint"},conCorreo("Envíalo por WhatsApp o al correo")),
+      h("div",{class:"row",style:"justify-content:center;margin-top:14px"},
+        archivo?h("button",{class:"btn wa",text:"Compartir por WhatsApp",onclick:function(){compartir(archivo,"Subsanación 5S · "+(INFO.cab.area||"")+" · "+(INFO.cab.numero||"")+" · "+fmtFecha(L.fecha))}}):null),
+      h("div",{class:"row",style:"justify-content:center;margin-top:8px"},
+        h("button",{class:"btn ghost",text:"Subsanar otro informe",onclick:function(){ov.remove();otroInforme()}}),
+        h("button",{class:"btn primary",text:"Cerrar",onclick:function(){ov.remove()}}))));
   document.body.appendChild(ov);ov.querySelector("button").focus();
 }
 
@@ -500,13 +569,15 @@ async function generar(){
     var base=L.nombre.replace(/\.docx$/i,"").replace(/_(LEVANTADO|SUBSANADO).*$/,"");
     var name=base+"_SUBSANADO.docx";
     var dl=(window.claude&&window.claude.use)?await window.claude.use("downloads").catch(function(){return null}):null;
-    if(dl){try{await dl.save({filename:name,data:out});celebrar(r.c,r.t)}catch(e){toast(e&&e.code==="declined"?"Descarga cancelada.":"No se pudo guardar el archivo aquí ("+(e&&e.code||"error")+").")}}
-    else{var a=document.createElement("a");a.href=URL.createObjectURL(out);a.download=name;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},2000);celebrar(r.c,r.t)}
+    var arch={name:name,blob:out};
+    if(dl){try{await dl.save({filename:name,data:out});celebrar(r.c,r.t,arch)}catch(e){toast(e&&e.code==="declined"?"Descarga cancelada.":"No se pudo guardar el archivo aquí ("+(e&&e.code||"error")+").")}}
+    else{var a=document.createElement("a");a.href=URL.createObjectURL(out);a.download=name;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},4000);celebrar(r.c,r.t,arch)}
   }catch(e){console.error(e);toast("No se pudo generar el Word: "+(e.message||e))}
   finally{b.disabled=false;b.textContent="Generar Word"}
 }
 document.getElementById("btnGen").addEventListener("click",generar);
-document.getElementById("btnCambiar").addEventListener("click",function(){document.getElementById("fileDoc").click()});
+document.getElementById("btnCambiar").addEventListener("click",otroInforme);
+document.getElementById("btnSig").addEventListener("click",irPendiente);
 
 /* ---------- tema ---------- */
 function temaActual(){var t=document.documentElement.getAttribute("data-theme");if(t)return t;return matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}
