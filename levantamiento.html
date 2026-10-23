@@ -452,7 +452,7 @@ function zoom(src){var z=h("div",{class:"zoom",role:"dialog","aria-label":"Foto 
 
 /* ---------- vistas ---------- */
 function render(){
-  var m=document.getElementById("main");m.textContent="";
+  var y=scrollY,m=document.getElementById("main");m.style.minHeight=m.offsetHeight+"px";m.textContent="";requestAnimationFrame(function(){m.style.minHeight=""});
   document.getElementById("bar").style.display=L?"":"none";
   if(!L){m.appendChild(viewCarga());return}
   m.appendChild(viewDatos());

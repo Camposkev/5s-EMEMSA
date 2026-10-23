@@ -204,6 +204,10 @@ section.card>h2,.card-head h2{font-size:1.2rem;font-weight:700}
 @media (max-width:520px){.bar .lg{display:none}.bar .sm{display:inline}.bar .btn{padding:9px 12px;font-size:.9rem}}
 .ver{display:inline-flex;align-items:center;gap:6px;margin-top:10px;font-size:.75rem;font-weight:600;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:3px 10px 3px 4px;background:var(--panel)}
 .ver b{background:var(--ink);color:var(--bg);border-radius:999px;padding:1px 8px;font-weight:700}
+.area-item{display:flex;gap:6px;align-items:stretch;margin-top:8px}
+.area-item .area-row{margin-top:0;flex:1;min-width:0}
+.area-x{flex:none;width:44px;border:1.5px solid var(--line);background:var(--panel);color:var(--muted);border-radius:12px;font-size:1.5rem;line-height:1;cursor:pointer}
+.area-x:hover{color:var(--red);border-color:var(--red)}
 </style>
 </head>
 <body>
@@ -420,8 +424,8 @@ async function openEditor(f){
 function render(){
   document.querySelectorAll("nav.tabs button").forEach(function(b){b.setAttribute("aria-selected",b.dataset.tab===tab?"true":"false")});
   document.getElementById("bar").style.display=tab==="reporte"?"":"none";
-  var m=document.getElementById("main");m.textContent="";
-  m.appendChild(tab==="reporte"?viewReporte():viewAreas());status();
+  var y=scrollY,m=document.getElementById("main");m.style.minHeight=m.offsetHeight+"px";m.textContent="";
+  m.appendChild(tab==="reporte"?viewReporte():viewAreas());status();m.style.minHeight="";if(Math.abs(scrollY-y)>1)scrollTo(0,y);
 }
 function hojas(sec){return paginar(sec).length}
 function nFotos(sec){return sec.hallazgos.reduce(function(a,x){return a+x.fotos.length},0)}
@@ -545,10 +549,12 @@ function viewRecorrido(){
     h("button",{class:"btn",text:"+ Agregar áreas",onclick:abrirSelector})));
   if(!n)box.appendChild(h("p",{class:"hint",text:"Aún no agregaste áreas."}));
   REC.areas.forEach(function(r,i){var inf=infoArea(r),on=r===R;
-    box.appendChild(h("button",{type:"button",class:"area-row"+(on?" on":""),"aria-current":on?"true":null,onclick:function(){if(on)return;activar(i);guardarYa();render();scrollTo({top:0,behavior:"smooth"})}},
-      h("span",{class:"st "+inf.e,"aria-hidden":"true",text:inf.e==="ok"?"✓":inf.e==="inc"?"!":"○"}),
-      h("span",{class:"area-txt"},h("b",{text:r.area||"Área sin nombre"}),h("small",{text:inf.t})),
-      on?h("span",{class:"area-tag",text:"Abierta"}):null))});
+    box.appendChild(h("div",{class:"area-item"},
+      h("button",{type:"button",class:"area-row"+(on?" on":""),"aria-current":on?"true":null,onclick:function(){if(on)return;activar(i);guardarYa();render()}},
+        h("span",{class:"st "+inf.e,"aria-hidden":"true",text:inf.e==="ok"?"✓":inf.e==="inc"?"!":"○"}),
+        h("span",{class:"area-txt"},h("b",{text:r.area||"Área sin nombre"}),h("small",{text:inf.t})),
+        on?h("span",{class:"area-tag",text:"Abierta"}):null),
+      h("button",{type:"button",class:"area-x",title:"Quitar esta área del recorrido","aria-label":"Quitar "+(r.area||"área")+" del recorrido",text:"×",onclick:function(){cerrarArea(r)}})))});
   return box}
 function dlg(titulo,cuerpo,acciones){var ov=h("div",{class:"dlg",role:"dialog","aria-modal":"true","aria-label":titulo},
     h("div",{class:"dlg-box"},h("h2",{text:titulo}),cuerpo,h("div",{class:"row dlg-act"},acciones)));
@@ -574,15 +580,15 @@ function abrirSelector(){
   function crear(){var nombres=Object.keys(sel).filter(function(x){return sel[x]});if(!nombres.length)return;var first=REC.areas.length;
     nombres.forEach(function(nom){var r=newAreaReport(),a=areas.find(function(x){return x.a===nom});r.area=nom;
       if(a){r.aplicada=a.a;r.jefe=a.j;var keep=R;R=r;aplicarSecciones(a,"");R=keep}REC.areas.push(r)});
-    activar(first);ov.remove();save();render();scrollTo({top:0,behavior:"smooth"})}
+    activar(first);ov.remove();save();render()}
   var ov=dlg("Agregar áreas al recorrido",h("div",null,
       h("p",{class:"dlg-txt",text:"Marca las áreas que te tocan en esta auditoría. Cada una tendrá su propio Word con el N° "+String(REC.numero||"").padStart(4,"0")+"."}),buscar,lista),
     [h("button",{class:"btn",text:"Cancelar",onclick:function(){ov.remove()}}),ok]);
   pintar();cuenta();buscar.focus()}
 function borrarFotos(r){r.secciones.forEach(function(s){s.hallazgos.forEach(function(x){x.fotos.forEach(function(f){kvDel("ph:"+f.id);delete photoSrc[f.id];delete thumbs[f.id]})})})}
-async function cerrarArea(){if(!R)return;var nf=0;R.secciones.forEach(function(s){nf+=nFotos(s)});
-  var ok=await confirmar2("¿Cerrar "+(R.area||"esta área")+"?",(nf?"Se borrarán sus "+nf+(nf===1?" foto":" fotos")+" de este dispositivo. ":"")+(R.generado||!nf?"":"Aún no generaste su Word. ")+"Las demás áreas del recorrido no cambian.","Sí, cerrar área");
-  if(!ok)return;var i=REC.areas.indexOf(R);borrarFotos(R);REC.areas.splice(i,1);activar(Math.max(0,Math.min(i,REC.areas.length-1)));guardarYa();render();scrollTo(0,0)}
+async function cerrarArea(r){r=r&&r.secciones?r:R;if(!r)return;var nf=0;r.secciones.forEach(function(s){nf+=nFotos(s)});
+  var ok=await confirmar2("¿Cerrar "+(r.area||"esta área")+"?",(nf?"Se borrarán sus "+nf+(nf===1?" foto":" fotos")+" de este dispositivo. ":"")+(r.generado||!nf?"":"Aún no generaste su Word. ")+"Las demás áreas del recorrido no cambian.","Sí, cerrar área");
+  if(!ok)return;var i=REC.areas.indexOf(r),act=REC.areas.indexOf(R);borrarFotos(r);REC.areas.splice(i,1);if(r===R)act=Math.min(i,REC.areas.length-1);else if(i<act)act--;activar(Math.max(0,act));guardarYa();render()}
 async function nuevoRecorrido(){var n=REC.areas.length,gen=REC.areas.filter(function(r){return r.generado}).length;
   var ok=await confirmar2("¿Iniciar un nuevo recorrido?",n?"Se borrarán de este dispositivo las "+n+(n===1?" área":" áreas")+" de este recorrido ("+gen+" con Word generado). Asegúrate de haber enviado los Word y las fotos.":"Se limpiarán los datos para empezar desde cero.","Sí, nuevo recorrido");
   if(!ok)return;REC.areas.forEach(borrarFotos);photoSrc={};thumbs={};
