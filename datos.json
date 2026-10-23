@@ -355,7 +355,16 @@
     {
       "area": "OFICINA DE PROYECTOS MINA",
       "jefe": "JULIO TELLO SALVADOR",
-      "subareas": []
+      "subareas": [
+        {
+          "nombre": "OFICINA DE PROYECTOS MINA - MECANICOS",
+          "color": "A3DBFF"
+        },
+        {
+          "nombre": "OFICINA DE PROYECTOS MINA - ELECTRICOS",
+          "color": "FFD966"
+        }
+      ]
     }
   ]
 }
