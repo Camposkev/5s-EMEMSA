@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Datos editables del Programa 5S (datos.json)",
+  "type": "object",
+  "required": ["auditores", "areas"],
+  "properties": {
+    "actualizado": { "type": "string", "description": "Fecha de la última edición (AAAA-MM-DD)" },
+    "auditores": {
+      "type": "array", "minItems": 1,
+      "items": { "type": "string", "minLength": 1 },
+      "description": "Nombres que aparecen en 'Encargado de la inspección'. La app los ordena alfabéticamente."
+    },
+    "areas": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["area"],
+        "properties": {
+          "area": { "type": "string", "minLength": 1, "description": "Nombre del área tal como sale en el Word (debe ser único)" },
+          "jefe": { "type": "string", "description": "Jefe del área; se completa solo al elegir el área" },
+          "hojaAutomatica": { "type": "boolean", "description": "true: crea automáticamente una hoja con el nombre del área (oficinas)" },
+          "subareas": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["nombre"],
+              "properties": {
+                "nombre": { "type": "string", "minLength": 1 },
+                "color": { "type": "string", "pattern": "^#?[0-9A-Fa-f]{6}$", "description": "Color del título de la hoja en el Word (hexadecimal, como en Excel)" }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

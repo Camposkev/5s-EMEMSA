@@ -1,0 +1,229 @@
+{
+  "actualizado": "2026-10-15",
+  "auditores": [
+    "ANTONY NINAMANCCO",
+    "BRYAN BAZÁN",
+    "DAVID HUAMAN",
+    "D’ESTEFANO VASQUEZ",
+    "EDU APARICIO",
+    "JONATHAN SANCHEZ",
+    "JOSE QUISPE",
+    "KEVIN CAMPOS",
+    "LEANDRO YANARICO",
+    "LUIS ANGLAS",
+    "MAITTE GUILLÉN"
+  ],
+  "areas": [
+    {
+      "area": "ÁREA DE LLAVES Y FORJA",
+      "jefe": "JUAN CAMPOS AQUINO",
+      "subareas": [
+        { "nombre": "SUB-ÁREA DE TROQUELADO", "color": "00B050" },
+        { "nombre": "SUB-ÁREA DE PERFORADO, ESTAMPADO Y TAMBOREO", "color": "002060" },
+        { "nombre": "SUB-ÁREA DE NIQUELADO", "color": "ABF7AD" },
+        { "nombre": "SUB-ÁREA DE FRESADO", "color": "F7ABDE" },
+        { "nombre": "SUB-ÁREA DE LAMINADO DE FLEJES", "color": "A3DBFF" },
+        { "nombre": "SUB-ÁREA DE INYECCIÓN", "color": "FFD966" },
+        { "nombre": "SUB-ÁREA DE EMBOLSADO DE LLAVES", "color": "F7CAAC" },
+        { "nombre": "SUB-ÁREA DE FORJA", "color": "EE0000" }
+      ]
+    },
+    {
+      "area": "OFICINA DE LLAVES Y LATONES",
+      "jefe": "JUAN CAMPOS AQUINO / ALLAN GUERRERO REYES",
+      "hojaAutomatica": true,
+      "subareas": [
+        { "nombre": "ÁREA COMÚN", "color": "FFC000" }
+      ]
+    },
+    {
+      "area": "ÁREA DE ALMACÉN GENERAL",
+      "jefe": "JULIO CESAR RUIZ VILLAGARAY",
+      "subareas": [
+        { "nombre": "SUB-ÁREA DE ALMACÉN SUMINISTROS", "color": "ABF7AD" },
+        { "nombre": "SUB-ÁREA DE ALMACÉN LATONES", "color": "002060" },
+        { "nombre": "SUB-ÁREA DE ALMACÉN/P.T MERCANCÍA", "color": "A3DBFF" },
+        { "nombre": "SUB-ÁREA DE ALMACÉN PROYECTOS", "color": "92D050" },
+        { "nombre": "SUB-ÁREA DE ALMACÉN COMPONENTES", "color": "BF8F00" }
+      ]
+    },
+    {
+      "area": "OFICINA ALMACÉN",
+      "jefe": "JULIO CESAR RUIZ VILLAGARAY",
+      "hojaAutomatica": true,
+      "subareas": [
+        { "nombre": "ÁREA COMÚN", "color": "92D050" }
+      ]
+    },
+    {
+      "area": "ÁREA DE MANTENIMIENTO",
+      "jefe": "JUAN CARLOS SANDOVAL PALOMINO",
+      "subareas": [
+        { "nombre": "SUB-ÁREA DE MANTENIMIENTO", "color": "F4B183" }
+      ]
+    },
+    {
+      "area": "OFICINA MANTENIMIENTO",
+      "jefe": "JUAN CARLOS SANDOVAL PALOMINO",
+      "hojaAutomatica": true,
+      "subareas": [
+        { "nombre": "ÁREA COMÚN", "color": "F4B183" }
+      ]
+    },
+    {
+      "area": "ÁREA DE MAESTRANZA",
+      "jefe": "ALVARO VALENCIA SALAZAR",
+      "subareas": [
+        { "nombre": "SUB-ÁREA DE EROSIONADO/BANCO Y AJUSTE", "color": "FFC000" },
+        { "nombre": "SUB-ÁREA DE MÁQUINAS CONVENCIONALES", "color": "A3DBFF" },
+        { "nombre": "SUB-ÁREA DE TORNO CNC", "color": "92D050" },
+        { "nombre": "SUB-ÁREA DE MECANIZADO", "color": "B4C7E7" }
+      ]
+    },
+    {
+      "area": "OFICINA MAESTRANZA Y SS.EE.",
+      "jefe": "ALVARO VALENCIA SALAZAR",
+      "hojaAutomatica": true,
+      "subareas": [
+        { "nombre": "ÁREA COMÚN", "color": "B4C7E7" }
+      ]
+    },
+    {
+      "area": "LABORATORIOS DE CALIDAD",
+      "jefe": "ROBERT GUTIERREZ NORABUENA",
+      "subareas": [
+        { "nombre": "LABORATORIO DE CALIDAD - LATONES Y ME", "color": "FFFF00" },
+        { "nombre": "LABORATORIO DE CALIDAD - SERIADA", "color": "00B050" }
+      ]
+    },
+    {
+      "area": "OFICINAS DE CALIDAD",
+      "jefe": "ROBERT GUTIERREZ NORABUENA",
+      "subareas": [
+        { "nombre": "OFICINA CALIDAD - LLAVES/LATONES", "color": "C9C9C9" },
+        { "nombre": "OFICINA CALIDAD - MAESTRANZA Y SERVICIOS ESPECIALES", "color": "002060" }
+      ]
+    },
+    {
+      "area": "ÁREA DE PRODUCCIÓN SERIADA",
+      "jefe": "VICTOR RAÚL GOMEZ CASTILLO",
+      "subareas": [
+        { "nombre": "SUB-ÁREA DE CNC", "color": "FFC000" },
+        { "nombre": "SUB-ÁREA DE CONTEO", "color": "0070C0" },
+        { "nombre": "SUB-ÁREA DE TRAN., TONS. Y AFILADO", "color": "FFFF00" },
+        { "nombre": "SUB-ÁREA DE MULTIHUSILLOS", "color": "A3DBFF" },
+        { "nombre": "SUB-ÁREA DE ENSAMBLE DE VÁLVULAS", "color": "C45911" },
+        { "nombre": "SUB-ÁREA DE PRENSA Y TALADRO", "color": "FF3399" },
+        { "nombre": "SUB-ÁREA DE CAÑERÍA Y MANGUERAS", "color": "92D050" },
+        { "nombre": "SUB-ÁREA DE BRIQUETA (NAVE MP)", "color": "548235" },
+        { "nombre": "ÁREA COMÚN", "color": "B4C7E7" }
+      ]
+    },
+    {
+      "area": "ÁREA DE LATONES",
+      "jefe": "ALLAN GUERRERO REYES",
+      "subareas": [
+        { "nombre": "SUB-ÁREA DE FUNDICIÓN COLADA", "color": "92D050" },
+        { "nombre": "SUB-ÁREA DE LATONES/TREFILADO", "color": "EE0000" },
+        { "nombre": "SUB-ÁREA DE LATONES/EXTRUSIÓN", "color": "548235" },
+        { "nombre": "SUB-ÁREA DE LATONES/ALMACÉN COLADA", "color": "A3DBFF" },
+        { "nombre": "ÁREA COMÚN", "color": "00B0F0" }
+      ]
+    },
+    {
+      "area": "ÁREA DE SERVICIOS ESPECIALES",
+      "jefe": "ALVARO VALENCIA SALAZAR",
+      "subareas": [
+        { "nombre": "SUB-ÁREA DE HABILITADO", "color": "00B050" },
+        { "nombre": "SUB-ÁREA DE ARMADO 1", "color": "7030A0" },
+        { "nombre": "SUB-ÁREA DE ARMADO 2", "color": "002060" },
+        { "nombre": "SUB-ÁREA DE PINTURA Y GRANALLADO", "color": "FFFF00" }
+      ]
+    },
+    {
+      "area": "OFICINA DE RECURSOS HUMANOS",
+      "jefe": "CINTHIA RONDÓN VARGAS",
+      "subareas": []
+    },
+    {
+      "area": "OFICINA DE SISTEMAS",
+      "jefe": "ALEX ÑIQUEN GONZALES",
+      "subareas": []
+    },
+    {
+      "area": "OFICINA DE SIG",
+      "jefe": "SOFÍA CÓRDOVA MILLA",
+      "subareas": []
+    },
+    {
+      "area": "OFICINA DE SOPORTE TÉCNICO",
+      "jefe": "GERMÁN CÁRDENAS CÁMAC",
+      "subareas": []
+    },
+    {
+      "area": "OFICINA DE COMPRAS",
+      "jefe": "ROSARIO CARRASCO CONTRERAS",
+      "subareas": []
+    },
+    {
+      "area": "OFICINA DE CONTABILIDAD",
+      "jefe": "LUIS VILLEGAS PANTIGOSO",
+      "subareas": []
+    },
+    {
+      "area": "OFICINA DE FINANZAS",
+      "jefe": "LUCY MAURICIO",
+      "subareas": []
+    },
+    {
+      "area": "OFICINA COMERCIAL LURÍN",
+      "jefe": "VICENTE ALEJANDRO BUSTAMANTE TESTINO",
+      "subareas": []
+    },
+    {
+      "area": "OFICINA DE MEJORA DE PROCESOS",
+      "jefe": "FERNANDO FERNANDEZ",
+      "subareas": []
+    },
+    {
+      "area": "OFICINA DE PLANEAMIENTO LURÍN",
+      "jefe": "LUIS ALBERTO AMAYA MAYANGA",
+      "subareas": []
+    },
+    {
+      "area": "OFICINA DE COSTOS Y PRESUPUESTOS",
+      "jefe": "CRISTHIAN VARGAS QUISPE",
+      "subareas": []
+    },
+    {
+      "area": "OFICINA DE DISEÑO Y DESARROLLO",
+      "jefe": "RICARDO HENOSTROZA MEJIA",
+      "subareas": []
+    },
+    {
+      "area": "OFICINA DE SEMAS",
+      "jefe": "DANIEL ANGHELO CÁRDENAS MUNGUÍA",
+      "subareas": []
+    },
+    {
+      "area": "OFICINA DE PROYECTOS LIMA",
+      "jefe": "LUIS ALBERTO VERGARAY HUARACA",
+      "subareas": []
+    },
+    {
+      "area": "OFICINA DE PROYECTOS INGENIERÍA",
+      "jefe": "LUIS EDILBERTO VASQUEZ SERREPE",
+      "subareas": []
+    },
+    {
+      "area": "OFICINA DE PLANEAMIENTO MINA",
+      "jefe": "KATHRYN CORRALES GIL",
+      "subareas": []
+    },
+    {
+      "area": "OFICINA DE PROYECTOS MINA",
+      "jefe": "JULIO TELLO SALVADOR",
+      "subareas": []
+    }
+  ]
+}
