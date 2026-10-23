@@ -232,6 +232,10 @@ section.card>h2,.card-head h2{font-size:1.2rem;font-weight:700}
 .guia-pend{margin:0 0 10px;font-size:.86rem;color:#7A4300;background:#FFF4D6;border-radius:8px;padding:6px 10px}
 @keyframes pulsoHz{0%{box-shadow:0 0 0 0 rgba(242,183,5,.9)}100%{box-shadow:0 0 0 14px rgba(242,183,5,0)}}
 .ficha.pulso{animation:pulsoHz 1s ease-out 2;border-color:var(--tape)}
+.hoja-fin[hidden],.hoja-tg[hidden]{display:none}
+.hoja-fin{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;margin:-2px 0 14px;padding:10px 14px;border-radius:10px;border:1.5px solid color-mix(in srgb,var(--ok) 45%,var(--line));background:color-mix(in srgb,var(--ok) 9%,var(--panel));color:var(--ok);font:inherit;font-weight:600;cursor:pointer;min-height:46px}
+.hoja-fin b{color:var(--ink);font-weight:700;border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:5px 12px}
+.hoja-fin:hover b{border-color:var(--ink)}
 </style>
 </head>
 <body>
@@ -641,8 +645,10 @@ function guiaSec(sec){var hs=paginar(sec),k=hs.length,ult=k?estadoHoja(sec,k-1):
 /* al agregar fotos se pliegan las hojas ya completas (no la última) */
 function autoPlegar(sec){var hs=paginar(sec);for(var k=0;k<hs.length-1;k++){var key=sec.id+":"+k;if(hojaAbierta[key]==null&&estadoHoja(sec,k).completa)hojaAbierta[key]=false}}
 function irAHallazgo(hz){setTimeout(function(){var e=document.querySelector('[data-hz="'+hz.id+'"]');if(e)e.scrollIntoView({behavior:"smooth",block:"center"})},60)}
+function verHoja(key){var e=document.querySelector('[data-hoja="'+key+'"]');if(!e)return;var r=e.getBoundingClientRect();if(r.top<70||r.top>innerHeight*.6)scrollTo({top:scrollY+r.top-80,behavior:"smooth"})}
 function refrescarGuias(){if(!R)return;document.querySelectorAll("[data-guia]").forEach(function(el){var sec=R.secciones.find(function(x){return x.id===el.getAttribute("data-guia")});if(sec)el.replaceWith(guiaSec(sec))});
-  document.querySelectorAll("[data-hst]").forEach(function(el){var p=el.getAttribute("data-hst").split(":"),sec=R.secciones.find(function(x){return x.id===p[0]});if(!sec)return;var e=estadoHoja(sec,+p[1]);el.className="hoja-st "+e.cls;el.textContent=e.txt})}
+  document.querySelectorAll("[data-hst]").forEach(function(el){var p=el.getAttribute("data-hst").split(":"),sec=R.secciones.find(function(x){return x.id===p[0]});if(!sec)return;var e=estadoHoja(sec,+p[1]);el.className="hoja-st "+e.cls;el.textContent=e.txt;
+    var k=el.getAttribute("data-hst");document.querySelectorAll('[data-hfin="'+k+'"],[data-htg="'+k+'"]').forEach(function(b){b.hidden=!e.completa})})}
 function viewSeccion(sec,si){
   var fill="#"+sec.color, ink="#"+textOn(sec.color), nf=nFotos(sec), nh=hojas(sec);
   var titulo=h("input",{value:sec.titulo,"aria-label":"Título de la sub-área",oninput:function(){sec.titulo=this.value.toUpperCase();save()}});
@@ -653,14 +659,16 @@ function viewSeccion(sec,si){
   var hojasSec=paginar(sec);
   hojasSec.forEach(function(hj,k){var e=estadoHoja(sec,k),key=sec.id+":"+k;
     var cerrada=hojaAbierta[key]===false&&e.completa;
-    var blk=h("div",{class:"hoja"+(e.completa?" ok":"")+(cerrada?" cerrada":"")});
+    var blk=h("div",{class:"hoja"+(e.completa?" ok":"")+(cerrada?" cerrada":""),"data-hoja":key});
     blk.appendChild(h("div",{class:"hoja-sep"},h("span",{class:"hoja-tag",text:"Hoja "+(k+1)}),
       h("span",{class:"hoja-st "+e.cls,"data-hst":key,text:e.txt}),
-      e.completa?h("button",{type:"button",class:"btn ghost hoja-tg","aria-expanded":cerrada?"false":"true",text:cerrada?"Ver hoja ▾":"Ocultar ▴",onclick:function(){hojaAbierta[key]=cerrada;render()}}):null));
+      h("button",{type:"button",class:"btn ghost hoja-tg","data-htg":key,hidden:!e.completa,"aria-expanded":cerrada?"false":"true",text:cerrada?"Ver hoja ▾":"Ocultar ▴",onclick:function(){hojaAbierta[key]=cerrada;render();if(!cerrada)verHoja(key)}})));
     if(cerrada){blk.appendChild(h("button",{type:"button",class:"hoja-res",title:"Ver o editar la hoja "+(k+1),onclick:function(){hojaAbierta[key]=true;render()}},
         hj.map(function(hz,n){return h("span",{class:"hr-it"},h("span",{class:"hr-ph"},hz.fotos.map(function(f){return h("img",{src:thumbs[f.id]||photoSrc[f.id],alt:""})})),
           h("span",{class:"hr-tx"},h("b",{text:"Hallazgo "+(n+1)+" · "+textoS(hz.ss)}),h("small",{text:frase(hz.d)})))})))}
-    else hj.forEach(function(hz){var el=viewHallazgo(sec,hz,sec.hallazgos.indexOf(hz));el.setAttribute("data-hz",hz.id);blk.appendChild(el)});
+    else{hj.forEach(function(hz){var el=viewHallazgo(sec,hz,sec.hallazgos.indexOf(hz));el.setAttribute("data-hz",hz.id);blk.appendChild(el)});
+      blk.appendChild(h("button",{type:"button",class:"hoja-fin","data-hfin":key,hidden:!e.completa,onclick:function(){hojaAbierta[key]=false;render();verHoja(key)}},
+        h("span",{text:"✓ Hoja "+(k+1)+" completa"}),h("b",{text:"Ocultar hoja ▴"})))}
     body.appendChild(blk)});
   body.appendChild(guiaSec(sec));
   return h("section",{class:"card sec"},
