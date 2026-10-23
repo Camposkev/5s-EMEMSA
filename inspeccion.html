@@ -243,6 +243,7 @@ section.card>h2,.card-head h2{font-size:1.2rem;font-weight:700}
 .otras{border-top:4px solid var(--ink)}
 .otra-row .area-go{flex:none;font-size:.82rem;font-weight:700;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:4px 10px;background:var(--panel)}
 .otra-row:hover .area-go{border-color:var(--ink)}
+.vacio-areas{text-align:center;padding:6px 0 4px}.vacio-areas .hint{max-width:46ch;margin:0 auto 12px}
 </style>
 </head>
 <body>
@@ -294,6 +295,14 @@ function capa(id,nombre,x,y,cx,cy,cuerpo){
   '<wp:extent cx="'+Math.max(1,Math.round(cx))+'" cy="'+Math.max(1,Math.round(cy))+'"/><wp:effectExtent l="0" t="0" r="0" b="0"/><wp:wrapNone/>'+
   '<wp:docPr id="'+id+'" name="'+nombre+' '+id+'"/><wp:cNvGraphicFramePr/>'+
   '<a:graphic '+NS_A+'><a:graphicData uri="http://schemas.microsoft.com/office/word/2010/wordprocessingShape">'+cuerpo+'</a:graphicData></a:graphic></wp:anchor></w:drawing></w:r>'}
+/* tamaño de las fotos en el Word: las 2 fotos de una misma fila salen con la MISMA altura
+   (bordes superiores alineados) y juntas ocupan el ancho de la celda */
+function medidasFotos(fotos,maxW,maxH){var EMU=914400,out=[],gap=0.06*EMU;
+  for(var i=0;i<fotos.length;i+=2){var a=fotos[i],b=fotos[i+1];
+    if(b){var ra=a.w/a.h,rb=b.w/b.h,hh=Math.min(maxH,(2*maxW-gap)/(ra+rb));
+      out.push({cx:Math.round(ra*hh),cy:Math.round(hh)},{cx:Math.round(rb*hh),cy:Math.round(hh)})}
+    else{var sc=Math.min(maxW/a.w,maxH/a.h);out.push({cx:Math.round(a.w*sc),cy:Math.round(a.h*sc)})}}
+  return out}
 function capasFoto(f,cx,cy,sig,dy){ // sig(): siguiente id único; dy: desplazamiento vertical si la foto es más baja que la más alta de su línea
   var capa0=capa;function capaD(id,nombre,x,y,w,h,c){return capa0(id,nombre,x,y+(dy||0),w,h,c)}
   var EMU=914400,out='',lw=Math.max(25400,Math.round(Math.max(cx,cy)*0.009)),R='E00000';
@@ -301,7 +310,15 @@ function capasFoto(f,cx,cy,sig,dy){ // sig(): siguiente id único; dy: desplazam
     if(m.t==='c'){out+=capaD(sig(),'Círculo',x,y,w,h,'<wps:wsp><wps:cNvSpPr/><wps:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="'+Math.max(1,Math.round(w))+'" cy="'+Math.max(1,Math.round(h))+'"/></a:xfrm><a:prstGeom prst="ellipse"><a:avLst/></a:prstGeom><a:noFill/><a:ln w="'+lw+'"><a:solidFill><a:srgbClr val="'+R+'"/></a:solidFill></a:ln></wps:spPr><wps:bodyPr/></wps:wsp>')}
     else{var W=Math.max(1,Math.round(w)),H=Math.max(1,Math.round(h)),sx=Math.round(x1-x),sy=Math.round(y1-y),ex=Math.round(x2-x),ey=Math.round(y2-y);
       out+=capaD(sig(),'Flecha',x,y,W,H,'<wps:wsp><wps:cNvSpPr/><wps:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="'+W+'" cy="'+H+'"/></a:xfrm><a:custGeom><a:avLst/><a:gdLst/><a:ahLst/><a:cxnLst/><a:rect l="0" t="0" r="r" b="b"/><a:pathLst><a:path w="'+W+'" h="'+H+'" fill="none"><a:moveTo><a:pt x="'+sx+'" y="'+sy+'"/></a:moveTo><a:lnTo><a:pt x="'+ex+'" y="'+ey+'"/></a:lnTo></a:path></a:pathLst></a:custGeom><a:noFill/><a:ln w="'+lw+'" cap="rnd"><a:solidFill><a:srgbClr val="'+R+'"/></a:solidFill><a:tailEnd type="triangle" w="med" len="med"/></a:ln></wps:spPr><wps:bodyPr/></wps:wsp>')}});
-  if(f.num){var b=Math.min(0.3*EMU,0.3*Math.min(cx,cy)),mg=b*0.25,pt=Math.max(6,Math.round(b/EMU*72*0.62*2)); // tamaño en medios puntos
+  if(f.num&&f.numRid){var bq=Math.round(Math.min(0.3*EMU,0.3*Math.min(cx,cy))),mq=Math.round(bq*0.18),nid=sig();
+    out+='<w:r><w:drawing><wp:anchor distT="0" distB="0" distL="0" distR="0" simplePos="0" relativeHeight="'+(251700000+nid)+'" behindDoc="0" locked="0" layoutInCell="1" allowOverlap="1">'+
+      '<wp:simplePos x="0" y="0"/><wp:positionH relativeFrom="character"><wp:posOffset>'+mq+'</wp:posOffset></wp:positionH><wp:positionV relativeFrom="line"><wp:posOffset>'+Math.round(mq+(dy||0))+'</wp:posOffset></wp:positionV>'+
+      '<wp:extent cx="'+bq+'" cy="'+bq+'"/><wp:effectExtent l="0" t="0" r="0" b="0"/><wp:wrapNone/><wp:docPr id="'+nid+'" name="Número '+f.num+'"/>'+
+      '<wp:cNvGraphicFramePr><a:graphicFrameLocks '+NS_A+' noChangeAspect="1"/></wp:cNvGraphicFramePr><a:graphic '+NS_A+'><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture">'+
+      '<pic:pic xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:nvPicPr><pic:cNvPr id="0" name="numero'+f.num+'.png"/><pic:cNvPicPr><a:picLocks noChangeAspect="1"/></pic:cNvPicPr></pic:nvPicPr>'+
+      '<pic:blipFill><a:blip r:embed="'+f.numRid+'" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill>'+
+      '<pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="'+bq+'" cy="'+bq+'"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:anchor></w:drawing></w:r>'}
+  else if(f.num){var b=Math.min(0.3*EMU,0.3*Math.min(cx,cy)),mg=b*0.25,pt=Math.max(6,Math.round(b/EMU*72*0.62*2)); // tamaño en medios puntos
     out+=capaD(sig(),'Número',mg,mg,b,b,'<wps:wsp><wps:cNvSpPr txBox="1"/><wps:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="'+Math.round(b)+'" cy="'+Math.round(b)+'"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom><a:solidFill><a:srgbClr val="808080"/></a:solidFill><a:ln w="12700"><a:solidFill><a:srgbClr val="FFFFFF"/></a:solidFill></a:ln></wps:spPr>'+
       '<wps:txbx><w:txbxContent><w:p><w:pPr><w:spacing w:before="0" w:after="0" w:line="240" w:lineRule="auto"/><w:jc w:val="center"/></w:pPr><w:r><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/><w:b/><w:color w:val="FFFFFF"/><w:sz w:val="'+pt+'"/><w:szCs w:val="'+pt+'"/></w:rPr><w:t>'+f.num+'</w:t></w:r></w:p></w:txbxContent></wps:txbx>'+
       '<wps:bodyPr rot="0" vert="horz" wrap="none" lIns="0" tIns="0" rIns="0" bIns="0" anchor="ctr" anchorCtr="0"><a:noAutofit/></wps:bodyPr></wps:wsp>')}
@@ -323,12 +340,13 @@ async function buildDocx(JSZip, templateB64, data){
     x=expandList(x,'{{L_REC}}',b.items.map(function(it){return it.r}));
     var fotos=[];b.items.forEach(function(it){(it.fotos||[]).forEach(function(f){fotos.push(f)})});
     var k=fotos.length, maxW=(k>1?2.3:4.6)*EMU, maxH=2.25*EMU, runs=[];
-    var altos=fotos.map(function(f){var s=Math.min(maxW/f.w,maxH/f.h);return Math.round(f.h*s)});
+    var dim=medidasFotos(fotos,maxW,maxH),altos=dim.map(function(d){return d.cy});
     function maxLinea(i){var a=i-i%2;return Math.max(altos[a],altos[a+1]||0)}
     fotos.forEach(function(f,fi){n++;id++;
       var rid='rIdFoto'+n,name='foto'+n+'.jpg';zip.file('word/media/'+name,f.bytes);
       rels=rels.replace('</Relationships>','<Relationship Id="'+rid+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/'+name+'"/></Relationships>');
-      var s=Math.min(maxW/f.w,maxH/f.h),cx=Math.round(f.w*s),cy=Math.round(f.h*s),fid=id;runs.push(capasFoto(f,cx,cy,function(){return ++capaId},maxLinea(fi)-cy)+imgRun(rid,name,fid,cx,cy));});
+      if(f.num&&f.numPng){var nr='rIdNum'+n;zip.file('word/media/numero'+n+'.png',f.numPng);rels=rels.replace('</Relationships>','<Relationship Id="'+nr+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/numero'+n+'.png"/></Relationships>');f.numRid=nr}
+      var cx=dim[fi].cx,cy=dim[fi].cy,fid=id;runs.push(capasFoto(f,cx,cy,function(){return ++capaId},maxLinea(fi)-cy)+imgRun(rid,name,fid,cx,cy));});
     x=x.replace('<w:r><w:t>{{FOTOS}}</w:t></w:r>',function(){return runs.join('<w:r><w:t xml:space="preserve"> </w:t></w:r>')});
     if(bi>0)parts.push('<w:p><w:pPr><w:spacing w:before="0" w:after="0" w:line="20" w:lineRule="exact"/><w:rPr><w:sz w:val="2"/></w:rPr></w:pPr><w:r><w:rPr><w:sz w:val="2"/></w:rPr><w:br w:type="page"/></w:r></w:p>');
     parts.push(x);
@@ -336,6 +354,8 @@ async function buildDocx(JSZip, templateB64, data){
   doc=doc.substring(0,ts)+parts.join('')+doc.substring(te);
   Object.keys(simple).forEach(function(k){doc=doc.split('{{'+k+'}}').join(xmlEsc(simple[k]));});
   zip.file('word/document.xml',doc); zip.file('word/_rels/document.xml.rels',rels);
+  var ct=await zip.file('[Content_Types].xml').async('string');
+  if(!/Extension="png"/i.test(ct)){zip.file('[Content_Types].xml',ct.replace(/(<Types[^>]*>)/,'$1<Default Extension="png" ContentType="image/png"/>'))}
   return zip;
 }
 if(typeof module!=='undefined') module.exports={buildDocx:buildDocx};
@@ -399,6 +419,11 @@ function paginar(sec){var hojas=[],cur=null,n=0;
 function posicion(sec,hz){var hs=paginar(sec);for(var i=0;i<hs.length;i++){var j=hs[i].indexOf(hz);if(j>=0)return {hoja:i+1,num:j+1}}return {hoja:1,num:1}}
 
 /* ---------- fotos ---------- */
+/* número del hallazgo: cuadro gris perfecto (PNG) que se ancla sobre la foto en el Word */
+async function numeroPng(n){var S=120,c=document.createElement("canvas");c.width=c.height=S;var x=c.getContext("2d");
+  x.fillStyle="#FFFFFF";x.fillRect(0,0,S,S);x.fillStyle="#808080";x.fillRect(5,5,S-10,S-10);
+  x.fillStyle="#FFFFFF";x.font="bold "+(String(n).length>1?62:76)+"px Arial, Helvetica, sans-serif";x.textAlign="center";x.textBaseline="middle";x.fillText(String(n),S/2,S/2+4);
+  var b=await new Promise(function(r){c.toBlob(r,"image/png")});return new Uint8Array(await b.arrayBuffer())}
 function loadImg(src){return new Promise(function(res,rej){var i=new Image();i.onload=function(){res(i)};i.onerror=rej;i.src=src})}
 async function fileToFoto(file){
   var url=URL.createObjectURL(file);try{var img=await loadImg(url)}finally{URL.revokeObjectURL(url)}
@@ -466,7 +491,7 @@ function hojas(sec){return paginar(sec).length}
 function nFotos(sec){return sec.hallazgos.reduce(function(a,x){return a+x.fotos.length},0)}
 function status(){var el=document.getElementById("status"),n=REC?REC.areas.length:0;
   var listas=REC?REC.areas.filter(function(r){return !faltaArea(r).length}).length:0;
-  el.textContent=n?n+(n===1?" área · ":" áreas · ")+listas+(listas===1?" lista":" listas")+" para generar":"Agrega las áreas del recorrido";
+  el.textContent=n?n+(n===1?" área · ":" áreas · ")+listas+(listas===1?" lista":" listas")+" para generar":"Agrega las áreas a inspeccionar";
   var b=document.getElementById("btnGen");if(!b.disabled)b.textContent=listas>1?"Generar todos ("+listas+")":"Generar Word"}
 function faltaArea(r){var f=[];if(!(r.area||"").trim())f.push("el área");if(!(REC.inspector||"").trim())f.push("el encargado");
   if(!r.secciones.length)f.push("al menos una sub-área");
@@ -547,11 +572,9 @@ function viewReporte(){
       field("Fecha de inspección",h("input",{type:"date",value:REC.fecha,onchange:function(){setComun("fecha",this.value)}})),
       field("Encargado de la inspección",inspSel,"full"))));
   frag.appendChild(viewRecorrido());
-  if(!R){frag.appendChild(h("section",{class:"card vacio-rec"},h("h2",{text:"Recorrido nuevo"}),
-      h("p",{class:"hint",text:"Completa los datos de arriba y agrega las áreas que te tocan en esta auditoría. Puedes elegir varias: cada una tendrá su propio Word."}),
-      h("button",{class:"btn primary grande",text:"+ Agregar áreas",onclick:abrirSelector})));return frag}
+  if(!R)return frag;
   frag.appendChild(h("section",{class:"card area-act"},
-    h("div",{class:"card-head"},h("h2",{text:"Área abierta"}),h("button",{class:"btn ghost danger",style:"padding:5px 10px",text:"Cerrar área",onclick:cerrarArea})),
+    h("div",{class:"card-head"},h("h2",{text:"Área abierta"})),
     h("div",{class:"grid"},
       field("Inspección para",areaSel,"full"),
       field("Jefe del área",h("input",{value:R.jefe,oninput:function(){R.jefe=this.value;save()}}),"full"))));
@@ -569,7 +592,6 @@ function viewReporte(){
   if(!faltan.length){sel.value=verArea?"area":"otra";otra.hidden=sel.value!=="otra"}
   frag.appendChild(h("section",{class:"card"},h("h2",{text:R.secciones.length?"Agregar otra sub-área":"Agregar sub-área"}),
     subs.length&&!faltan.length?h("p",{class:"hint",style:"color:var(--ok);font-weight:600;margin-bottom:6px",text:"✓ Ya agregaste todas las sub-áreas de esta área. Usa “Otra” solo si necesitas una adicional."}):null,
-    h("p",{class:"hint",style:"margin-bottom:10px",text:"Cada hoja lleva máximo 2 fotos: 2 hallazgos de 1 foto, o 1 hallazgo con 2 fotos. Si hay más, continúa en la hoja siguiente con el mismo título."}),
     h("div",{class:"addsec"},sel,otra,h("button",{class:"btn primary",text:"Agregar",onclick:function(){
       if(sel.value==="otra"){var n=otra.value.trim().toUpperCase();if(!n){toast("Escribe el nombre de la sub-área.");return}addSeccion(n)}
       else if(sel.value==="area"){addSeccion(am.a,"DEEAF6")}
@@ -584,10 +606,10 @@ function viewOtrasAreas(){
   var orden={inc:0,vacia:1,ok:2};otras.sort(function(a,b){return orden[a.inf.e]-orden[b.inf.e]||a.i-b.i});
   var pend=otras.filter(function(o){return o.inf.e!=="ok"}).length;
   var box=h("section",{class:"card otras",id:"otras"},h("div",{class:"card-head"},
-    h("h2",{text:otras.length?(pend?"Continuar con otra área":"Otras áreas del recorrido"):"¿Te toca otra área?"}),
+    h("h2",{text:otras.length?(pend?"Continuar con otra área":"Otras áreas a inspeccionar"):"¿Te toca otra área?"}),
     h("button",{class:"btn",style:"padding:6px 10px",text:"+ Agregar áreas",onclick:abrirSelector})));
-  if(!otras.length){box.appendChild(h("p",{class:"hint",text:"Es la única área de este recorrido. Si inspeccionas otra, agrégala aquí."}));return box}
-  box.appendChild(h("p",{class:"hint",style:"margin:-4px 0 4px",text:pend?pend+(pend===1?" área falta completar.":" áreas faltan completar.")+" Toca una para abrirla.":"✓ Las demás áreas ya están listas para generar."}));
+  if(!otras.length){box.appendChild(h("p",{class:"hint",text:"Si inspeccionas otra área, agrégala aquí."}));return box}
+  box.appendChild(h("p",{class:"hint",style:"margin:-4px 0 4px",text:pend?pend+(pend===1?" área por completar.":" áreas por completar.")+"":"✓ Las demás áreas ya están listas para generar."}));
   otras.forEach(function(o){var r=o.r,inf=o.inf;
     box.appendChild(h("button",{type:"button",class:"area-row otra-row",onclick:function(){activar(o.i);guardarYa();render();
         var a=document.querySelector(".area-act");if(a)scrollTo({top:a.getBoundingClientRect().top+scrollY-16,behavior:"smooth"})}},
@@ -598,9 +620,11 @@ function viewOtrasAreas(){
 function viewRecorrido(){
   var n=REC.areas.length;
   var box=h("section",{class:"card",id:"recorrido"},h("div",{class:"card-head"},
-    h("h2",{text:"Áreas del recorrido"+(n?" ("+n+")":"")}),
-    h("button",{class:"btn",text:"+ Agregar áreas",onclick:abrirSelector})));
-  if(!n)box.appendChild(h("p",{class:"hint",text:"Aún no agregaste áreas."}));
+    h("h2",{text:"Áreas a inspeccionar"+(n?" ("+n+")":"")}),
+    n?h("button",{class:"btn",text:"+ Agregar áreas",onclick:abrirSelector}):null));
+  if(!n)box.appendChild(h("div",{class:"vacio-areas"},
+    h("p",{class:"hint",text:"Elige las áreas que te tocan hoy. Puedes elegir varias: cada una tendrá su propio Word."}),
+    h("button",{class:"btn primary grande",text:"+ Agregar áreas",onclick:abrirSelector})));
   REC.areas.forEach(function(r,i){var inf=infoArea(r),on=r===R;
     box.appendChild(h("div",{class:"area-item"},
       h("button",{type:"button",class:"area-row"+(on?" on":""),"aria-current":on?"true":null,onclick:function(){if(on)return;activar(i);guardarYa();render()}},
@@ -634,7 +658,7 @@ function abrirSelector(){
     nombres.forEach(function(nom){var r=newAreaReport(),a=areas.find(function(x){return x.a===nom});r.area=nom;
       if(a){r.aplicada=a.a;r.jefe=a.j;var keep=R;R=r;aplicarSecciones(a,"");R=keep}REC.areas.push(r)});
     activar(first);ov.remove();save();render()}
-  var ov=dlg("Agregar áreas al recorrido",h("div",null,
+  var ov=dlg("Agregar áreas a inspeccionar",h("div",null,
       h("p",{class:"dlg-txt",text:"Marca las áreas que te tocan en esta auditoría. Cada una tendrá su propio Word con el N° "+String(REC.numero||"").padStart(4,"0")+"."}),buscar,lista),
     [h("button",{class:"btn",text:"Cancelar",onclick:function(){ov.remove()}}),ok]);
   pintar();cuenta();buscar.focus()}
@@ -656,17 +680,16 @@ function estadoHoja(sec,k){var hs0=paginar(sec),hj=hs0[k]||[],ult=k===hs0.length
 function guiaSec(sec){var hs=paginar(sec),k=hs.length,ult=k?estadoHoja(sec,k-1):null,pend=null;
   hs.some(function(hj,i){return hj.some(function(hz,n){if(!hzOk(hz)){pend={hz:hz,hoja:i+1,num:n+1};return true}})});
   var titulo,sub,cls="guia";
-  if(!k){titulo="Primer hallazgo → Hoja 1";sub="Toma la foto del primer hallazgo de esta sub-área."}
+  if(!k){titulo="Primer hallazgo → Hoja 1";sub=""}
   else if(ult.llena){var nh=hs[k-1].length;titulo="Siguiente hallazgo → Hoja "+(k+1);sub="La Hoja "+k+" ya tiene sus "+FOTOS_POR_HOJA+" fotos"+(ult.completa?" y está completa ✓":"")+". La próxima foto empieza la Hoja "+(k+1)+" como Hallazgo 1.";cls+=" nueva"}
   else{titulo="Siguiente hallazgo → Hoja "+k+" · Hallazgo "+(hs[k-1].length+1);sub="A la Hoja "+k+" le queda espacio para 1 foto más."}
   return h("div",{class:cls,"data-guia":sec.id},
-    h("div",{class:"guia-t"},h("span",{class:"guia-ic","aria-hidden":"true",text:"➜"}),h("span",null,h("b",{text:titulo}),h("small",{text:sub}))),
+    h("div",{class:"guia-t"},h("span",{class:"guia-ic","aria-hidden":"true",text:"➜"}),h("span",null,h("b",{text:titulo}),sub?h("small",{text:sub}):null)),
     pend?h("p",{class:"guia-pend"},"Antes de seguir, completa la S y la descripción del Hallazgo "+pend.num+" de la Hoja "+pend.hoja+". ",
       h("button",{type:"button",class:"btn ghost",style:"padding:3px 8px",text:"Ir al hallazgo",onclick:function(){var e=document.querySelector('[data-hz="'+pend.hz.id+'"]');if(e){e.scrollIntoView({behavior:"smooth",block:"center"});e.classList.remove("pulso");void e.offsetWidth;e.classList.add("pulso")}}})):null,
     h("div",{class:"row"},
       h("button",{class:"btn primary",text:"+ Tomar foto",onclick:function(){pickFotos(sec,true)}}),
-      h("button",{class:"btn",text:"+ Desde galería",onclick:function(){pickFotos(sec,false)}})),
-    h("p",{class:"hint",style:"margin-top:8px",text:"Para una 2.ª foto del mismo hallazgo, usa el botón dentro del hallazgo."}))}
+      h("button",{class:"btn",text:"+ Desde galería",onclick:function(){pickFotos(sec,false)}})))}
 /* al agregar fotos se pliegan las hojas ya completas (no la última) */
 function autoPlegar(sec){var hs=paginar(sec);for(var k=0;k<hs.length-1;k++){var key=sec.id+":"+k;if(hojaAbierta[key]==null&&estadoHoja(sec,k).completa)hojaAbierta[key]=false}}
 function irAHallazgo(hz){setTimeout(function(){var e=document.querySelector('[data-hz="'+hz.id+'"]');if(e)e.scrollIntoView({behavior:"smooth",block:"center"})},60)}
@@ -813,7 +836,7 @@ async function wordDeArea(r){
       for(var j=0;j<hs[k].length;j++){var hz=hs[k][j],fs=[];
         for(var q=0;q<hz.fotos.length;q++){var f=hz.fotos[q],c=await composeFoto(f,0,1100,true);
           var blob=await new Promise(function(res){c.toBlob(res,"image/jpeg",.85)});
-          fs.push({bytes:new Uint8Array(await blob.arrayBuffer()),w:c.width,h:c.height,shapes:f.shapes||[],num:q===0?j+1:0})}
+          fs.push({bytes:new Uint8Array(await blob.arrayBuffer()),w:c.width,h:c.height,shapes:f.shapes||[],num:q===0?j+1:0,numPng:q===0?await numeroPng(j+1):null})}
         items.push({s:textoS(hz.ss),d:frase(hz.d),r:frase(hz.r),fotos:fs})}
       bloques.push({titulo:s.titulo,fill:s.color,tcolor:textOn(s.color),items:items})}}
   var num="N°"+String(REC.numero||"").padStart(4,"0");
