@@ -519,12 +519,17 @@ function viewReporte(){
   R.secciones.forEach(function(sec,si){frag.appendChild(viewSeccion(sec,si))});
   // agregar sub-área
   var subs=am?am.subs:[];
-  var sel=h("select",{"aria-label":"Sub-área"},subs.map(function(s,i){return h("option",{value:String(i),text:s.n})}),am&&(!subs.length||am.auto)?h("option",{value:"area",text:am.a}):null,
+  /* solo se ofrecen las sub-áreas que aún no se agregaron */
+  var ya=R.secciones.map(function(s){return norm(s.titulo)});
+  var faltan=subs.map(function(s,i){return {s:s,i:i}}).filter(function(o){return ya.indexOf(norm(o.s.n))<0});
+  var verArea=am&&(!subs.length||am.auto)&&ya.indexOf(norm(am.a))<0;
+  var sel=h("select",{"aria-label":"Sub-área"},faltan.map(function(o){return h("option",{value:String(o.i),text:o.s.n})}),verArea?h("option",{value:"area",text:am.a}):null,
     h("option",{value:"otra",text:"Otra (escribir nombre)…"}));
   var otra=h("input",{placeholder:"SUB-ÁREA DE …",hidden:true});
   sel.addEventListener("change",function(){otra.hidden=sel.value!=="otra";if(!otra.hidden)otra.focus()});
-  if(!subs.length){sel.value=am?"area":"otra";otra.hidden=sel.value!=="otra"}
+  if(!faltan.length){sel.value=verArea?"area":"otra";otra.hidden=sel.value!=="otra"}
   frag.appendChild(h("section",{class:"card"},h("h2",{text:R.secciones.length?"Agregar otra sub-área":"Agregar sub-área"}),
+    subs.length&&!faltan.length?h("p",{class:"hint",style:"color:var(--ok);font-weight:600;margin-bottom:6px",text:"✓ Ya agregaste todas las sub-áreas de esta área. Usa “Otra” solo si necesitas una adicional."}):null,
     h("p",{class:"hint",style:"margin-bottom:10px",text:"Cada hoja lleva máximo 2 fotos: 2 hallazgos de 1 foto, o 1 hallazgo con 2 fotos. Si hay más, continúa en la hoja siguiente con el mismo título."}),
     h("div",{class:"addsec"},sel,otra,h("button",{class:"btn primary",text:"Agregar",onclick:function(){
       if(sel.value==="otra"){var n=otra.value.trim().toUpperCase();if(!n){toast("Escribe el nombre de la sub-área.");return}addSeccion(n)}
