@@ -210,7 +210,7 @@ section.card>h2{font-size:1.2rem;font-weight:700}
 .subir{position:fixed;right:16px;bottom:96px;z-index:7;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:color-mix(in srgb,var(--panel) 92%,transparent);color:var(--ink);box-shadow:0 4px 14px rgba(0,0,0,.18);display:grid;place-items:center;cursor:pointer;opacity:0;transform:translateY(10px);pointer-events:none;transition:opacity .2s,transform .2s}
 .subir.ver{opacity:.92;transform:none;pointer-events:auto}
 .subir:hover{opacity:1;border-color:var(--ink)}
-@media (min-width:1140px){.subir{right:calc((100vw - 1000px)/2 - 64px)}}
+@media (min-width:1140px){.subir{right:max(16px,calc((100vw - 1000px)/2 - 64px))}}
 </style>
 </head>
 <body>

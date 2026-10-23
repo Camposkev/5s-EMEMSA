@@ -239,7 +239,10 @@ section.card>h2,.card-head h2{font-size:1.2rem;font-weight:700}
 .subir{position:fixed;right:16px;bottom:96px;z-index:7;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:color-mix(in srgb,var(--panel) 92%,transparent);color:var(--ink);box-shadow:0 4px 14px rgba(0,0,0,.18);display:grid;place-items:center;cursor:pointer;opacity:0;transform:translateY(10px);pointer-events:none;transition:opacity .2s,transform .2s}
 .subir.ver{opacity:.92;transform:none;pointer-events:auto}
 .subir:hover{opacity:1;border-color:var(--ink)}
-@media (min-width:1100px){.subir{right:calc((100vw - 820px)/2 - 64px)}}
+@media (min-width:1100px){.subir{right:max(16px,calc((100vw - 820px)/2 - 64px))}}
+.otras{border-top:4px solid var(--ink)}
+.otra-row .area-go{flex:none;font-size:.82rem;font-weight:700;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:4px 10px;background:var(--panel)}
+.otra-row:hover .area-go{border-color:var(--ink)}
 </style>
 </head>
 <body>
@@ -372,7 +375,7 @@ function setComun(k,v){REC[k]=v;REC.areas.forEach(function(r){r[k]=v});if(k==="i
 function activar(i){REC.activa=i;R=REC.areas[i]||null}
 var saveT=null;function flush(){clearTimeout(saveT);saveT=null;if(!REC)return;
   kvSet("rec4",JSON.stringify(REC));kvSet("prefs",JSON.stringify(prefs))}
-function save(){if(R)R.generado=false;clearTimeout(saveT);saveT=setTimeout(flush,400);try{status();var o=document.getElementById("recorrido");if(o)o.replaceWith(viewRecorrido());refrescarGuias()}catch(e){}}
+function save(){if(R)R.generado=false;clearTimeout(saveT);saveT=setTimeout(flush,400);try{status();var o=document.getElementById("recorrido");if(o)o.replaceWith(viewRecorrido());var o2=document.getElementById("otras");if(o2&&R)o2.replaceWith(viewOtrasAreas());refrescarGuias()}catch(e){}}
 function guardarYa(){clearTimeout(saveT);saveT=setTimeout(flush,400)}
 addEventListener("pagehide",function(){if(saveT)flush()});document.addEventListener("visibilitychange",function(){if(document.visibilityState==="hidden"&&saveT)flush()});
 
@@ -571,9 +574,27 @@ function viewReporte(){
       if(sel.value==="otra"){var n=otra.value.trim().toUpperCase();if(!n){toast("Escribe el nombre de la sub-área.");return}addSeccion(n)}
       else if(sel.value==="area"){addSeccion(am.a,"DEEAF6")}
       else{var s=subs[+sel.value];addSeccion(s.n,s.c)}}}))));
+  frag.appendChild(viewOtrasAreas());
   return frag;
 }
 
+/* al final de la página: cambiar de área sin volver arriba */
+function viewOtrasAreas(){
+  var otras=REC.areas.map(function(r,i){return {r:r,i:i,inf:infoArea(r)}}).filter(function(o){return o.r!==R});
+  var orden={inc:0,vacia:1,ok:2};otras.sort(function(a,b){return orden[a.inf.e]-orden[b.inf.e]||a.i-b.i});
+  var pend=otras.filter(function(o){return o.inf.e!=="ok"}).length;
+  var box=h("section",{class:"card otras",id:"otras"},h("div",{class:"card-head"},
+    h("h2",{text:otras.length?(pend?"Continuar con otra área":"Otras áreas del recorrido"):"¿Te toca otra área?"}),
+    h("button",{class:"btn",style:"padding:6px 10px",text:"+ Agregar áreas",onclick:abrirSelector})));
+  if(!otras.length){box.appendChild(h("p",{class:"hint",text:"Es la única área de este recorrido. Si inspeccionas otra, agrégala aquí."}));return box}
+  box.appendChild(h("p",{class:"hint",style:"margin:-4px 0 4px",text:pend?pend+(pend===1?" área falta completar.":" áreas faltan completar.")+" Toca una para abrirla.":"✓ Las demás áreas ya están listas para generar."}));
+  otras.forEach(function(o){var r=o.r,inf=o.inf;
+    box.appendChild(h("button",{type:"button",class:"area-row otra-row",onclick:function(){activar(o.i);guardarYa();render();
+        var a=document.querySelector(".area-act");if(a)scrollTo({top:a.getBoundingClientRect().top+scrollY-16,behavior:"smooth"})}},
+      h("span",{class:"st "+inf.e,"aria-hidden":"true",text:inf.e==="ok"?"✓":inf.e==="inc"?"!":"○"}),
+      h("span",{class:"area-txt"},h("b",{text:r.area||"Área sin nombre"}),h("small",{text:inf.t})),
+      h("span",{class:"area-go","aria-hidden":"true",text:"Abrir →"})))});
+  return box}
 function viewRecorrido(){
   var n=REC.areas.length;
   var box=h("section",{class:"card",id:"recorrido"},h("div",{class:"card-head"},
