@@ -255,14 +255,15 @@ function capa(id,nombre,x,y,cx,cy,cuerpo){
   '<wp:extent cx="'+Math.max(1,Math.round(cx))+'" cy="'+Math.max(1,Math.round(cy))+'"/><wp:effectExtent l="0" t="0" r="0" b="0"/><wp:wrapNone/>'+
   '<wp:docPr id="'+id+'" name="'+nombre+' '+id+'"/><wp:cNvGraphicFramePr/>'+
   '<a:graphic '+NS_A+'><a:graphicData uri="http://schemas.microsoft.com/office/word/2010/wordprocessingShape">'+cuerpo+'</a:graphicData></a:graphic></wp:anchor></w:drawing></w:r>'}
-function capasFoto(f,cx,cy,sig){ // sig(): siguiente id único
+function capasFoto(f,cx,cy,sig,dy){ // sig(): siguiente id único; dy: desplazamiento vertical si la foto es más baja que la más alta de su línea
+  var capa0=capa;function capaD(id,nombre,x,y,w,h,c){return capa0(id,nombre,x,y+(dy||0),w,h,c)}
   var EMU=914400,out='',lw=Math.max(25400,Math.round(Math.max(cx,cy)*0.009)),R='E00000';
   (f.shapes||[]).forEach(function(m){var x1=m.x1*cx,y1=m.y1*cy,x2=m.x2*cx,y2=m.y2*cy,x=Math.min(x1,x2),y=Math.min(y1,y2),w=Math.abs(x2-x1),h=Math.abs(y2-y1);
-    if(m.t==='c'){out+=capa(sig(),'Círculo',x,y,w,h,'<wps:wsp><wps:cNvSpPr/><wps:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="'+Math.max(1,Math.round(w))+'" cy="'+Math.max(1,Math.round(h))+'"/></a:xfrm><a:prstGeom prst="ellipse"><a:avLst/></a:prstGeom><a:noFill/><a:ln w="'+lw+'"><a:solidFill><a:srgbClr val="'+R+'"/></a:solidFill></a:ln></wps:spPr><wps:bodyPr/></wps:wsp>')}
+    if(m.t==='c'){out+=capaD(sig(),'Círculo',x,y,w,h,'<wps:wsp><wps:cNvSpPr/><wps:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="'+Math.max(1,Math.round(w))+'" cy="'+Math.max(1,Math.round(h))+'"/></a:xfrm><a:prstGeom prst="ellipse"><a:avLst/></a:prstGeom><a:noFill/><a:ln w="'+lw+'"><a:solidFill><a:srgbClr val="'+R+'"/></a:solidFill></a:ln></wps:spPr><wps:bodyPr/></wps:wsp>')}
     else{var W=Math.max(1,Math.round(w)),H=Math.max(1,Math.round(h)),sx=Math.round(x1-x),sy=Math.round(y1-y),ex=Math.round(x2-x),ey=Math.round(y2-y);
-      out+=capa(sig(),'Flecha',x,y,W,H,'<wps:wsp><wps:cNvSpPr/><wps:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="'+W+'" cy="'+H+'"/></a:xfrm><a:custGeom><a:avLst/><a:gdLst/><a:ahLst/><a:cxnLst/><a:rect l="0" t="0" r="r" b="b"/><a:pathLst><a:path w="'+W+'" h="'+H+'" fill="none"><a:moveTo><a:pt x="'+sx+'" y="'+sy+'"/></a:moveTo><a:lnTo><a:pt x="'+ex+'" y="'+ey+'"/></a:lnTo></a:path></a:pathLst></a:custGeom><a:noFill/><a:ln w="'+lw+'" cap="rnd"><a:solidFill><a:srgbClr val="'+R+'"/></a:solidFill><a:tailEnd type="triangle" w="med" len="med"/></a:ln></wps:spPr><wps:bodyPr/></wps:wsp>')}});
+      out+=capaD(sig(),'Flecha',x,y,W,H,'<wps:wsp><wps:cNvSpPr/><wps:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="'+W+'" cy="'+H+'"/></a:xfrm><a:custGeom><a:avLst/><a:gdLst/><a:ahLst/><a:cxnLst/><a:rect l="0" t="0" r="r" b="b"/><a:pathLst><a:path w="'+W+'" h="'+H+'" fill="none"><a:moveTo><a:pt x="'+sx+'" y="'+sy+'"/></a:moveTo><a:lnTo><a:pt x="'+ex+'" y="'+ey+'"/></a:lnTo></a:path></a:pathLst></a:custGeom><a:noFill/><a:ln w="'+lw+'" cap="rnd"><a:solidFill><a:srgbClr val="'+R+'"/></a:solidFill><a:tailEnd type="triangle" w="med" len="med"/></a:ln></wps:spPr><wps:bodyPr/></wps:wsp>')}});
   if(f.num){var b=Math.min(0.3*EMU,0.3*Math.min(cx,cy)),mg=b*0.25,pt=Math.max(6,Math.round(b/EMU*72*0.62*2)); // tamaño en medios puntos
-    out+=capa(sig(),'Número',mg,mg,b,b,'<wps:wsp><wps:cNvSpPr txBox="1"/><wps:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="'+Math.round(b)+'" cy="'+Math.round(b)+'"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom><a:solidFill><a:srgbClr val="808080"/></a:solidFill><a:ln w="12700"><a:solidFill><a:srgbClr val="FFFFFF"/></a:solidFill></a:ln></wps:spPr>'+
+    out+=capaD(sig(),'Número',mg,mg,b,b,'<wps:wsp><wps:cNvSpPr txBox="1"/><wps:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="'+Math.round(b)+'" cy="'+Math.round(b)+'"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom><a:solidFill><a:srgbClr val="808080"/></a:solidFill><a:ln w="12700"><a:solidFill><a:srgbClr val="FFFFFF"/></a:solidFill></a:ln></wps:spPr>'+
       '<wps:txbx><w:txbxContent><w:p><w:pPr><w:spacing w:before="0" w:after="0" w:line="240" w:lineRule="auto"/><w:jc w:val="center"/></w:pPr><w:r><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/><w:b/><w:color w:val="FFFFFF"/><w:sz w:val="'+pt+'"/><w:szCs w:val="'+pt+'"/></w:rPr><w:t>'+f.num+'</w:t></w:r></w:p></w:txbxContent></wps:txbx>'+
       '<wps:bodyPr rot="0" vert="horz" wrap="none" lIns="0" tIns="0" rIns="0" bIns="0" anchor="ctr" anchorCtr="0"><a:noAutofit/></wps:bodyPr></wps:wsp>')}
   return out}
@@ -283,10 +284,12 @@ async function buildDocx(JSZip, templateB64, data){
     x=expandList(x,'{{L_REC}}',b.items.map(function(it){return it.r}));
     var fotos=[];b.items.forEach(function(it){(it.fotos||[]).forEach(function(f){fotos.push(f)})});
     var k=fotos.length, maxW=(k>1?2.3:4.6)*EMU, maxH=2.25*EMU, runs=[];
-    fotos.forEach(function(f){n++;id++;
+    var altos=fotos.map(function(f){var s=Math.min(maxW/f.w,maxH/f.h);return Math.round(f.h*s)});
+    function maxLinea(i){var a=i-i%2;return Math.max(altos[a],altos[a+1]||0)}
+    fotos.forEach(function(f,fi){n++;id++;
       var rid='rIdFoto'+n,name='foto'+n+'.jpg';zip.file('word/media/'+name,f.bytes);
       rels=rels.replace('</Relationships>','<Relationship Id="'+rid+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/'+name+'"/></Relationships>');
-      var s=Math.min(maxW/f.w,maxH/f.h),cx=Math.round(f.w*s),cy=Math.round(f.h*s),fid=id;runs.push(capasFoto(f,cx,cy,function(){return ++capaId})+imgRun(rid,name,fid,cx,cy));});
+      var s=Math.min(maxW/f.w,maxH/f.h),cx=Math.round(f.w*s),cy=Math.round(f.h*s),fid=id;runs.push(capasFoto(f,cx,cy,function(){return ++capaId},maxLinea(fi)-cy)+imgRun(rid,name,fid,cx,cy));});
     x=x.replace('<w:r><w:t>{{FOTOS}}</w:t></w:r>',function(){return runs.join('<w:r><w:t xml:space="preserve"> </w:t></w:r>')});
     if(bi>0)parts.push('<w:p><w:pPr><w:spacing w:before="0" w:after="0" w:line="20" w:lineRule="exact"/><w:rPr><w:sz w:val="2"/></w:rPr></w:pPr><w:r><w:rPr><w:sz w:val="2"/></w:rPr><w:br w:type="page"/></w:r></w:p>');
     parts.push(x);
@@ -333,7 +336,7 @@ function setComun(k,v){REC[k]=v;REC.areas.forEach(function(r){r[k]=v});if(k==="i
 function activar(i){REC.activa=i;R=REC.areas[i]||null}
 var saveT=null;function flush(){clearTimeout(saveT);saveT=null;if(!REC)return;
   kvSet("rec4",JSON.stringify(REC));kvSet("prefs",JSON.stringify(prefs))}
-function save(){if(R)R.generado=false;clearTimeout(saveT);saveT=setTimeout(flush,400);try{status()}catch(e){}}
+function save(){if(R)R.generado=false;clearTimeout(saveT);saveT=setTimeout(flush,400);try{status();var o=document.getElementById("recorrido");if(o)o.replaceWith(viewRecorrido())}catch(e){}}
 function guardarYa(){clearTimeout(saveT);saveT=setTimeout(flush,400)}
 addEventListener("pagehide",function(){if(saveT)flush()});document.addEventListener("visibilitychange",function(){if(document.visibilityState==="hidden"&&saveT)flush()});
 
@@ -532,7 +535,7 @@ function viewReporte(){
 
 function viewRecorrido(){
   var n=REC.areas.length;
-  var box=h("section",{class:"card"},h("div",{class:"card-head"},
+  var box=h("section",{class:"card",id:"recorrido"},h("div",{class:"card-head"},
     h("h2",{text:"Áreas del recorrido"+(n?" ("+n+")":"")}),
     h("button",{class:"btn",text:"+ Agregar áreas",onclick:abrirSelector})));
   if(!n)box.appendChild(h("p",{class:"hint",text:"Aún no agregaste áreas."}));
@@ -720,13 +723,6 @@ async function wordDeArea(r){
   var zip=await buildDocx(JSZip,TEMPLATE_B64,{proyecto:REC.proyecto,numero:num,fecha:fmtFecha(REC.fecha),area:r.area.toUpperCase(),jefe:(r.jefe||"").toUpperCase(),inspector:(REC.inspector||"").toUpperCase(),bloques:bloques});
   var out=await zip.generateAsync({type:"blob",mimeType:"application/vnd.openxmlformats-officedocument.wordprocessingml.document"});
   return {name:"E-FSIG_022_REPORTE_5S_"+r.area.trim().replace(/[^\wÁÉÍÓÚÑáéíóúñ]+/g,"_")+"_"+num.replace("°","")+".docx",blob:out}}
-/* Compartir: en el celular abre el menú Compartir con los archivos (si el navegador lo permite);
-   si no, abre WhatsApp con el mensaje y la persona adjunta los archivos descargados. */
-async function compartir(archivos,texto){
-  var files=[];try{files=archivos.map(function(a){return new File([a.blob],a.name,{type:a.blob.type||"application/octet-stream"})})}catch(e){}
-  if(files.length&&navigator.canShare&&navigator.share){try{if(navigator.canShare({files:files})){await navigator.share({files:files,title:"Programa 5S",text:texto});return}}catch(e){if(e&&e.name==="AbortError")return}}
-  window.open("https://wa.me/?text="+encodeURIComponent(texto+"\n(Adjunto los archivos descargados.)"),"_blank","noopener");
-  toast("Se abrió WhatsApp con el mensaje. Adjunta los archivos que se descargaron (carpeta Descargas).")}
 
 /* ---------- mensaje final ---------- */
 var FRASES=[
@@ -746,9 +742,7 @@ function celebrar(o){ // o: {titulo, detalle, archivos:[{name,blob}], fotosDe:[r
   function fila(a,desc){lista.appendChild(h("div",{class:"cel-file"},h("span",{class:"fi "+(/\.docx$/.test(a.name)?"w":"z"),text:/\.docx$/.test(a.name)?"W":"ZIP"}),h("span",{class:"fn"},h("b",{text:a.name}),h("small",{text:desc}))))}
   o.archivos.forEach(function(a){fila(a,/\.docx$/.test(a.name)?"Word del área · descargado":"Word de cada área · descargado")});
   var bZip=h("button",{class:"btn",text:"Descargar fotos (ZIP)",onclick:async function(){var z=await descargarFotos(this,o.fotosDe);if(z){fotosZip=z;fila(z,"Fotos originales sin marcas · descargado");bZip.remove()}}});
-  var bWa=h("button",{class:"btn wa",text:"Compartir por WhatsApp",onclick:async function(){
-    if(!fotosZip){this.disabled=true;var z=await zipFotos(o.fotosDe).catch(function(){return null});this.disabled=false;if(z){fotosZip=z;await bajar(z.name,z.blob);fila(z,"Fotos originales sin marcas · descargado");bZip.remove()}}
-    compartir(o.archivos.concat(fotosZip?[fotosZip]:[]),o.texto)}});
+
   var ov=h("div",{class:"cel",role:"dialog","aria-modal":"true","aria-labelledby":"celT"},conf,
     h("div",{class:"cel-box"},ic,
       h("h2",{id:"celT",text:"¡Buen trabajo!"}),
@@ -756,8 +750,8 @@ function celebrar(o){ // o: {titulo, detalle, archivos:[{name,blob}], fotosDe:[r
       h("p",{class:"cel-frase",text:"“"+frase+"”"}),
       lista,
       o.pendientes?h("p",{class:"cel-warn",text:o.pendientes}):null,
-      h("p",{class:"hint"},conCorreo("Envía el Word y el ZIP de fotos originales (sin marcas) por WhatsApp o al correo")),
-      h("div",{class:"row",style:"justify-content:center;margin-top:14px"},bZip,bWa),
+      h("p",{class:"hint"},conCorreo("Envía el Word y el ZIP de fotos originales (sin marcas) al correo")),
+      h("div",{class:"row",style:"justify-content:center;margin-top:14px"},bZip),
       h("div",{class:"row",style:"justify-content:center;margin-top:8px"},
         h("button",{class:"btn ghost",text:"Terminé · Nuevo recorrido",onclick:function(){ov.remove();nuevoRecorrido()}}),
         h("button",{class:"btn primary",text:"Cerrar",onclick:function(){ov.remove()}}))));
