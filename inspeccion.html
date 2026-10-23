@@ -208,6 +208,30 @@ section.card>h2,.card-head h2{font-size:1.2rem;font-weight:700}
 .area-item .area-row{margin-top:0;flex:1;min-width:0}
 .area-x{flex:none;width:44px;border:1.5px solid var(--line);background:var(--panel);color:var(--muted);border-radius:12px;font-size:1.5rem;line-height:1;cursor:pointer}
 .area-x:hover{color:var(--red);border-color:var(--red)}
+.hoja{margin-bottom:6px}
+.hoja-sep{flex-wrap:wrap}
+.hoja-st{font-size:.8rem;font-weight:700;padding:3px 10px;border-radius:999px}
+.hoja-st.ok{background:#DDF1E6;color:#1E6B47}.hoja-st.inc{background:#FFF1CC;color:#7A4300}.hoja-st.esp{background:var(--field);color:var(--muted);border:1px solid var(--line)}
+.hoja-sep .hoja-tg{order:9;padding:4px 10px;font-size:.85rem}
+.hoja.ok .hoja-tag{background:var(--ok)}
+.hoja-res{display:flex;flex-direction:column;gap:6px;width:100%;text-align:left;font:inherit;color:var(--ink);background:color-mix(in srgb,var(--ok) 7%,var(--panel));border:1px solid color-mix(in srgb,var(--ok) 35%,var(--line));border-radius:10px;padding:8px 10px;margin-bottom:12px;cursor:pointer}
+.hr-it{display:flex;gap:10px;align-items:center;min-width:0}
+.hr-ph{display:flex;gap:3px;flex:none}
+.hr-ph img{width:44px;height:44px;object-fit:cover;border-radius:6px;display:block}
+.hr-tx{min-width:0;display:flex;flex-direction:column}
+.hr-tx b{font-size:.85rem}
+.hr-tx small{color:var(--muted);font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.guia{border:2px dashed var(--line);border-radius:12px;padding:12px 14px;margin:8px 0 4px;background:var(--field)}
+.guia.nueva{border:2px solid var(--tape);background:color-mix(in srgb,var(--tape) 12%,var(--panel))}
+.guia-t{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px}
+.guia-t>span:last-child{display:flex;flex-direction:column}
+.guia-t b{font-size:1.05rem;font-weight:800}
+.guia-t small{color:var(--muted);font-size:.86rem}
+.guia-ic{flex:none;width:30px;height:30px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-weight:800}
+.guia.nueva .guia-ic{background:var(--tape);color:#1C272B}
+.guia-pend{margin:0 0 10px;font-size:.86rem;color:#7A4300;background:#FFF4D6;border-radius:8px;padding:6px 10px}
+@keyframes pulsoHz{0%{box-shadow:0 0 0 0 rgba(242,183,5,.9)}100%{box-shadow:0 0 0 14px rgba(242,183,5,0)}}
+.ficha.pulso{animation:pulsoHz 1s ease-out 2;border-color:var(--tape)}
 </style>
 </head>
 <body>
@@ -340,7 +364,7 @@ function setComun(k,v){REC[k]=v;REC.areas.forEach(function(r){r[k]=v});if(k==="i
 function activar(i){REC.activa=i;R=REC.areas[i]||null}
 var saveT=null;function flush(){clearTimeout(saveT);saveT=null;if(!REC)return;
   kvSet("rec4",JSON.stringify(REC));kvSet("prefs",JSON.stringify(prefs))}
-function save(){if(R)R.generado=false;clearTimeout(saveT);saveT=setTimeout(flush,400);try{status();var o=document.getElementById("recorrido");if(o)o.replaceWith(viewRecorrido())}catch(e){}}
+function save(){if(R)R.generado=false;clearTimeout(saveT);saveT=setTimeout(flush,400);try{status();var o=document.getElementById("recorrido");if(o)o.replaceWith(viewRecorrido());refrescarGuias()}catch(e){}}
 function guardarYa(){clearTimeout(saveT);saveT=setTimeout(flush,400)}
 addEventListener("pagehide",function(){if(saveT)flush()});document.addEventListener("visibilitychange",function(){if(document.visibilityState==="hidden"&&saveT)flush()});
 
@@ -395,7 +419,7 @@ async function onFiles(e){var files=[].slice.call(e.target.files||[]);if(!files.
     if(files.length>1)toast("Cada hallazgo admite hasta 2 fotos; se agregó solo la primera.");save();render();if(f)openEditor(f);return}
   if(!pendingSec)return;var sec=pendingSec,last=null;
   for(var i=0;i<files.length;i++){try{var f2=await fileToFoto(files[i]);await refreshThumb(f2);last=f2;sec.hallazgos.push(newHz([f2]))}catch(err){toast("No se pudo leer una de las fotos.")}}
-  save();render();if(files.length===1&&last)openEditor(last)}
+  autoPlegar(sec);save();render();var nuevo=sec.hallazgos[sec.hallazgos.length-1];if(nuevo)irAHallazgo(nuevo);if(files.length===1&&last)openEditor(last)}
 document.getElementById("fileCam").addEventListener("change",onFiles);
 document.getElementById("fileGal").addEventListener("change",onFiles);
 
@@ -593,6 +617,32 @@ async function nuevoRecorrido(){var n=REC.areas.length,gen=REC.areas.filter(func
   var ok=await confirmar2("¿Iniciar un nuevo recorrido?",n?"Se borrarán de este dispositivo las "+n+(n===1?" área":" áreas")+" de este recorrido ("+gen+" con Word generado). Asegúrate de haber enviado los Word y las fotos.":"Se limpiarán los datos para empezar desde cero.","Sí, nuevo recorrido");
   if(!ok)return;REC.areas.forEach(borrarFotos);photoSrc={};thumbs={};
   var nx=Math.max(prefs.ultimo,parseInt(REC.numero,10)||0)+1;prefs.ultimo=nx-1;REC=newRec();REC.numero=nx;R=null;guardarYa();render();scrollTo(0,0);abrirSelector()}
+var hojaAbierta={};
+function hzOk(hz){return !!(hz.ss.length&&hz.d.trim())}
+function estadoHoja(sec,k){var hs0=paginar(sec),hj=hs0[k]||[],ult=k===hs0.length-1,occ=hj.reduce(function(a,x){return a+Math.max(1,x.fotos.length)},0),
+    inc=hj.filter(function(x){return !hzOk(x)}).length,llena=occ>=FOTOS_POR_HOJA;
+  if(inc)return {completa:false,llena:llena,cls:"inc",txt:"Falta completar "+inc+(inc===1?" hallazgo":" hallazgos")};
+  if(llena||!ult)return {completa:true,llena:true,cls:"ok",txt:"✓ Completa · "+occ+" de "+FOTOS_POR_HOJA+" fotos"};
+  return {completa:false,llena:false,cls:"esp",txt:"1 de "+FOTOS_POR_HOJA+" fotos · queda espacio para 1 hallazgo más"}}
+function guiaSec(sec){var hs=paginar(sec),k=hs.length,ult=k?estadoHoja(sec,k-1):null,pend=null;
+  hs.some(function(hj,i){return hj.some(function(hz,n){if(!hzOk(hz)){pend={hz:hz,hoja:i+1,num:n+1};return true}})});
+  var titulo,sub,cls="guia";
+  if(!k){titulo="Primer hallazgo → Hoja 1";sub="Toma la foto del primer hallazgo de esta sub-área."}
+  else if(ult.llena){var nh=hs[k-1].length;titulo="Siguiente hallazgo → Hoja "+(k+1);sub="La Hoja "+k+" ya tiene sus "+FOTOS_POR_HOJA+" fotos"+(ult.completa?" y está completa ✓":"")+". La próxima foto empieza la Hoja "+(k+1)+" como Hallazgo 1.";cls+=" nueva"}
+  else{titulo="Siguiente hallazgo → Hoja "+k+" · Hallazgo "+(hs[k-1].length+1);sub="A la Hoja "+k+" le queda espacio para 1 foto más."}
+  return h("div",{class:cls,"data-guia":sec.id},
+    h("div",{class:"guia-t"},h("span",{class:"guia-ic","aria-hidden":"true",text:"➜"}),h("span",null,h("b",{text:titulo}),h("small",{text:sub}))),
+    pend?h("p",{class:"guia-pend"},"Antes de seguir, completa la S y la descripción del Hallazgo "+pend.num+" de la Hoja "+pend.hoja+". ",
+      h("button",{type:"button",class:"btn ghost",style:"padding:3px 8px",text:"Ir al hallazgo",onclick:function(){var e=document.querySelector('[data-hz="'+pend.hz.id+'"]');if(e){e.scrollIntoView({behavior:"smooth",block:"center"});e.classList.remove("pulso");void e.offsetWidth;e.classList.add("pulso")}}})):null,
+    h("div",{class:"row"},
+      h("button",{class:"btn primary",text:"+ Tomar foto",onclick:function(){pickFotos(sec,true)}}),
+      h("button",{class:"btn",text:"+ Desde galería",onclick:function(){pickFotos(sec,false)}})),
+    h("p",{class:"hint",style:"margin-top:8px",text:"Para una 2.ª foto del mismo hallazgo, usa el botón dentro del hallazgo."}))}
+/* al agregar fotos se pliegan las hojas ya completas (no la última) */
+function autoPlegar(sec){var hs=paginar(sec);for(var k=0;k<hs.length-1;k++){var key=sec.id+":"+k;if(hojaAbierta[key]==null&&estadoHoja(sec,k).completa)hojaAbierta[key]=false}}
+function irAHallazgo(hz){setTimeout(function(){var e=document.querySelector('[data-hz="'+hz.id+'"]');if(e)e.scrollIntoView({behavior:"smooth",block:"center"})},60)}
+function refrescarGuias(){if(!R)return;document.querySelectorAll("[data-guia]").forEach(function(el){var sec=R.secciones.find(function(x){return x.id===el.getAttribute("data-guia")});if(sec)el.replaceWith(guiaSec(sec))});
+  document.querySelectorAll("[data-hst]").forEach(function(el){var p=el.getAttribute("data-hst").split(":"),sec=R.secciones.find(function(x){return x.id===p[0]});if(!sec)return;var e=estadoHoja(sec,+p[1]);el.className="hoja-st "+e.cls;el.textContent=e.txt})}
 function viewSeccion(sec,si){
   var fill="#"+sec.color, ink="#"+textOn(sec.color), nf=nFotos(sec), nh=hojas(sec);
   var titulo=h("input",{value:sec.titulo,"aria-label":"Título de la sub-área",oninput:function(){sec.titulo=this.value.toUpperCase();save()}});
@@ -601,15 +651,18 @@ function viewSeccion(sec,si){
     h("details",{class:"col"},h("summary",{text:"Color del título"}),h("div",{class:"sw"},PALETA.map(function(c){return h("button",{style:"background:#"+c,"aria-label":"Color "+c,"aria-pressed":sec.color===c,onclick:function(){sec.color=c;save();render()}})}))),
     h("div",{style:"height:12px"}));
   var hojasSec=paginar(sec);
-  sec.hallazgos.forEach(function(hz,j){var p=posicion(sec,hz);
-    if(p.num===1){var hj=hojasSec[p.hoja-1],nfh=hj.reduce(function(a,x){return a+x.fotos.length},0);
-      body.appendChild(h("div",{class:"hoja-sep"},h("span",{class:"hoja-tag",text:"Hoja "+p.hoja}),
-        h("span",{class:"hoja-info",text:nfh+" de "+FOTOS_POR_HOJA+" fotos"+(nfh>=FOTOS_POR_HOJA?" · completa":"")})))}
-    body.appendChild(viewHallazgo(sec,hz,j))});
-  body.appendChild(h("p",{class:"hint",style:"margin:4px 0 8px",text:"Cada foto nueva crea un hallazgo. Para una 2.ª foto del mismo hallazgo, usa el botón dentro del hallazgo."}));
-  body.appendChild(h("div",{class:"row"},
-    h("button",{class:"btn",text:"+ Tomar foto",onclick:function(){pickFotos(sec,true)}}),
-    h("button",{class:"btn",text:"+ Desde galería",onclick:function(){pickFotos(sec,false)}})));
+  hojasSec.forEach(function(hj,k){var e=estadoHoja(sec,k),key=sec.id+":"+k;
+    var cerrada=hojaAbierta[key]===false&&e.completa;
+    var blk=h("div",{class:"hoja"+(e.completa?" ok":"")+(cerrada?" cerrada":"")});
+    blk.appendChild(h("div",{class:"hoja-sep"},h("span",{class:"hoja-tag",text:"Hoja "+(k+1)}),
+      h("span",{class:"hoja-st "+e.cls,"data-hst":key,text:e.txt}),
+      e.completa?h("button",{type:"button",class:"btn ghost hoja-tg","aria-expanded":cerrada?"false":"true",text:cerrada?"Ver hoja ▾":"Ocultar ▴",onclick:function(){hojaAbierta[key]=cerrada;render()}}):null));
+    if(cerrada){blk.appendChild(h("button",{type:"button",class:"hoja-res",title:"Ver o editar la hoja "+(k+1),onclick:function(){hojaAbierta[key]=true;render()}},
+        hj.map(function(hz,n){return h("span",{class:"hr-it"},h("span",{class:"hr-ph"},hz.fotos.map(function(f){return h("img",{src:thumbs[f.id]||photoSrc[f.id],alt:""})})),
+          h("span",{class:"hr-tx"},h("b",{text:"Hallazgo "+(n+1)+" · "+textoS(hz.ss)}),h("small",{text:frase(hz.d)})))})))}
+    else hj.forEach(function(hz){var el=viewHallazgo(sec,hz,sec.hallazgos.indexOf(hz));el.setAttribute("data-hz",hz.id);blk.appendChild(el)});
+    body.appendChild(blk)});
+  body.appendChild(guiaSec(sec));
   return h("section",{class:"card sec"},
     h("div",{class:"sec-head",style:"background:"+fill+";color:"+ink},h("span",{class:"t",text:sec.titulo||"Sin título"}),
       h("span",{class:"row"},h("span",{style:"font-size:.9rem",text:sec.hallazgos.length+" hallazgos · "+nf+" fotos · "+nh+(nh===1?" hoja":" hojas")}),
@@ -874,6 +927,7 @@ async function cargarDatos(){
         for(var q=hz.fotos.length-1;q>=0;q--){var f=hz.fotos[q],src=await kvGet("ph:"+f.id);if(src){photoSrc[f.id]=src;await refreshThumb(f)}else hz.fotos.splice(q,1)}
         if(!hz.fotos.length)s.hallazgos.splice(j,1)}}}
   activar(Math.min(REC.activa||0,Math.max(0,REC.areas.length-1)));
+  REC.areas.forEach(function(r){r.secciones.forEach(autoPlegar)});
   render();
 })();
 </script>
